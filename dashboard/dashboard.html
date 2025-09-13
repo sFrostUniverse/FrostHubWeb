@@ -8,24 +8,38 @@
 </head>
 <body>
   <header class="header">
-    <h1 id="welcomeMsg">Welcome</h1>
-    <button id="menuToggle" class="menu-btn">☰</button>
+    <h1>FrostHub Dashboard</h1>
   </header>
 
-  <main class="container">
-    <!-- Class Status -->
-    <section id="classStatus" class="card">
-      <h2>Class Status</h2>
-      <div id="ongoing">Ongoing: -</div>
-      <div id="upcoming">Upcoming: -</div>
-    </section>
+  <div class="layout">
+    <!-- Sidebar (always visible on left) -->
+    <nav id="sidebar" class="sidebar">
+  <ul>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="doubts/doubts.html">Doubts</a></li>
+    <li><a href="timetable/timetable.html">Timetable</a></li>
+    <li><a href="notes/notes.html">Notes</a></li>
+    <li><a href="#" id="logout">Logout</a></li>
+  </ul>
+</nav>
 
-    <!-- Today’s Classes -->
-    <section id="todayClasses" class="card">
-      <h2>Today’s Classes</h2>
-      <div id="classesList">Loading...</div>
-    </section>
-  </main>
+
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Class Status -->
+      <section id="classStatus" class="card">
+        <h2>Class Status</h2>
+        <div id="ongoing">Ongoing: -</div>
+        <div id="upcoming">Upcoming: -</div>
+      </section>
+
+      <!-- Today’s Classes -->
+      <section id="todayClasses" class="card">
+        <h2>Today’s Classes</h2>
+        <div id="classesList">Loading...</div>
+      </section>
+    </main>
+  </div>
 
   <!-- Scripts -->
   <script src="../shared/utils.js"></script>
