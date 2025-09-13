@@ -32,7 +32,7 @@ async function handleGoogleResponse(response) {
 // ---- CHECK USER GROUP ----
 async function checkUserGroup() {
   const token = localStorage.getItem("token");
-  if (!token) return window.location.href = "login.html"; // stays in /login/
+  if (!token) return window.location.href = "/FrostHubWeb/login/login.html";
 
   try {
     const res = await fetch(`${API_BASE}/users/me`, {
@@ -45,13 +45,13 @@ async function checkUserGroup() {
     if (user.groupId) {
       localStorage.setItem("groupId", user.groupId);
       localStorage.setItem("role", user.role);
-      window.location.href = "../dashboard/dashboard.html"; // ✅ correct path
+      window.location.href = "/FrostHubWeb/dashboard/dashboard.html"; // ✅ absolute path
     } else {
-      window.location.href = "group.html"; // ✅ still in /login/
+      window.location.href = "/FrostHubWeb/login/group.html"; // ✅ absolute path
     }
   } catch (err) {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/FrostHubWeb/login/login.html"; // ✅ absolute path
   }
 }
 
@@ -77,7 +77,7 @@ if (createGroupForm) {
       const data = await res.json();
 
       localStorage.setItem("groupId", data._id || data.groupId);
-      window.location.href = "../dashboard/dashboard.html"; // ✅ correct path
+      window.location.href = "/FrostHubWeb/dashboard/dashboard.html"; // ✅ absolute path
     } catch (err) {
       alert(err.message);
     }
@@ -106,7 +106,7 @@ if (joinGroupForm) {
       const data = await res.json();
 
       localStorage.setItem("groupId", data._id || data.groupId);
-      window.location.href = "../dashboard/dashboard.html"; // ✅ correct path
+      window.location.href = "/FrostHubWeb/dashboard/dashboard.html"; // ✅ absolute path
     } catch (err) {
       alert(err.message);
     }
@@ -127,6 +127,6 @@ const logoutBtn = document.getElementById("logout");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     localStorage.clear();
-    window.location.href = "../login/login.html"; // ✅ back to login
+    window.location.href = "/FrostHubWeb/login/login.html"; // ✅ absolute path
   });
 }
