@@ -8,7 +8,7 @@
 </head>
 <body>
   <header class="header">
-    <h1>Doubts</h1>
+    <h1>FrostHub - Doubts</h1>
   </header>
 
   <div class="layout">
@@ -16,7 +16,7 @@
     <nav class="sidebar">
       <ul>
         <li><a href="../dashboard.html">Dashboard</a></li>
-        <li><a href="doubts.html">Doubts</a></li>
+        <li><a href="doubts.html" class="active">Doubts</a></li>
         <li><a href="../timetable/timetable.html">Timetable</a></li>
         <li><a href="../notes/notes.html">Notes</a></li>
         <li><a href="#" id="logout">Logout</a></li>
@@ -25,6 +25,18 @@
 
     <!-- Content -->
     <main class="container">
+      <!-- Ask Doubt Form -->
+      <section class="card">
+        <h2>Ask a Doubt</h2>
+        <form id="askDoubtForm" enctype="multipart/form-data">
+          <input type="text" id="doubtTitle" name="title" placeholder="Enter title" required />
+          <textarea id="doubtDescription" name="description" placeholder="Enter description" required></textarea>
+          <input type="file" id="doubtImage" name="image" accept="image/*" />
+          <button type="submit">Submit</button>
+        </form>
+      </section>
+
+      <!-- Doubts List -->
       <section class="card">
         <h2>Group Doubts</h2>
         <div id="doubtsList">Loading doubts...</div>
@@ -32,6 +44,7 @@
     </main>
   </div>
 
+  <!-- Scripts -->
   <script src="../../shared/utils.js"></script>
   <script src="doubts.js"></script>
 </body>
