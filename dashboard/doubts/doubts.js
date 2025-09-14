@@ -1,3 +1,4 @@
+console.log("DEBUG API_BASE in doubts.js:", window.API_BASE);
 window.addEventListener("DOMContentLoaded", async () => {
   const doubtsList = document.getElementById("doubtsList");
   const groupId = localStorage.getItem("groupId");

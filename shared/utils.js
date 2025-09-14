@@ -21,3 +21,4 @@ async function apiFetch(url, options = {}) {
 
 // Make it available everywhere
 window.apiFetch = apiFetch;
+window.API_BASE = API_BASE;   // 👈 Add this line
