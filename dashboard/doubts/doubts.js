@@ -8,29 +8,39 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    // Fetch doubts from backend
     const doubts = await apiFetch(`/doubts/groups/${groupId}/doubts`);
+    console.log("Fetched doubts:", doubts);
 
     if (!doubts || doubts.length === 0) {
       doubtsList.innerText = "No doubts found.";
       return;
     }
 
-    doubtsList.innerHTML = `
-      <ul>
-        ${doubts
-          .map(
-            d => `
-              <li>
-                <strong>${d.title}</strong> - ${d.description} <br>
-                <em>By: ${d.userId?.username || "Unknown"}</em>
-                ${d.answered ? "✅ Answered" : "❓ Not Answered"}
-              </li>
-            `
-          )
-          .join("")}
-      </ul>
-    `;
+    doubtsList.innerHTML = doubts
+      .map(d => {
+        const answersHtml =
+          d.answers.length > 0
+            ? `<ul>${d.answers
+                .map(
+                  a =>
+                    `<li>${a.text} <em>- by ${a.createdBy?.username || "Unknown"}</em></li>`
+                )
+                .join("")}</ul>`
+            : "<p>No answers yet</p>";
+
+        return `
+          <div class="doubt-card">
+            <h3>${d.title}</h3>
+            <p>${d.description}</p>
+            <small>By ${d.userId?.username || "Unknown"} on ${new Date(
+          d.createdAt
+        ).toLocaleString()}</small>
+            <p>Status: ${d.answered ? "✅ Answered" : "❓ Not Answered"}</p>
+            ${answersHtml}
+          </div>
+        `;
+      })
+      .join("");
   } catch (err) {
     console.error("Error loading doubts:", err);
     doubtsList.innerText = "Failed to load doubts.";
