@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FrostHub - Doubt Detail</title>
+  <link rel="stylesheet" href="../dashboard.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Doubt Detail</h1>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <ul>
+        <li><a href="../dashboard.html">Dashboard</a></li>
+        <li><a href="doubts.html">Doubts</a></li>
+        <li><a href="../timetable/timetable.html">Timetable</a></li>
+        <li><a href="../notes/notes.html">Notes</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main content -->
+    <main class="container">
+      <section class="card">
+        <h2 id="doubtTitle">Loading...</h2>
+        <p id="doubtDescription"></p>
+        <small id="doubtMeta"></small>
+        <p>Status: <span id="doubtStatus"></span></p>
+      </section>
+
+      <section class="card">
+        <h3>Answers</h3>
+        <div id="answersList">Loading...</div>
+      </section>
+
+      <section class="card">
+        <h3>Post an Answer</h3>
+        <form id="answerForm">
+          <textarea id="answerText" placeholder="Write your answer..." required></textarea>
+          <input type="file" id="answerImage" accept="image/*">
+          <button type="submit">Submit Answer</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../shared/utils.js"></script>
+  <script src="doubtDetail.js"></script>
+</body>
+</html>

@@ -44,6 +44,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // 🔹 Fetch and render doubts
+// 🔹 Fetch and render doubts
 async function loadDoubts(groupId) {
   const doubtsList = document.getElementById("doubtsList");
   try {
@@ -53,30 +54,38 @@ async function loadDoubts(groupId) {
       return;
     }
 
-    doubtsList.innerHTML = doubts.map(d => `
-      <div class="doubt-card">
+    doubtsList.innerHTML = doubts
+      .map(
+        (d) => `
+      <div class="doubt-card" data-id="${d._id}">
         <h3>${d.title}</h3>
         <p>${d.description}</p>
-        ${d.imageUrl ? `<img src="${d.imageUrl}" alt="Doubt image" style="max-width:200px;">` : ""}
-        <small>By ${d.userId?.username || "Unknown"} on ${new Date(d.createdAt).toLocaleString()}</small>
-        <p>Status: ${d.answered ? "✅ Answered" : "❓ Not Answered"}</p>
-        
-        ${d.answers.length > 0 
-          ? `<h4>Answers:</h4>
-             <ul>
-               ${d.answers.map(a => `
-                 <li>
-                   ${a.text}
-                   ${a.imageUrl ? `<br><img src="${a.imageUrl}" style="max-width:150px;">` : ""}
-                   <em>- by ${a.createdBy?.username || "Unknown"}</em>
-                 </li>`).join("")}
-             </ul>`
-          : "<p>No answers yet.</p>"
+        ${
+          d.imageUrl
+            ? `<img src="${d.imageUrl}" alt="Doubt image" style="max-width:200px;">`
+            : ""
         }
+        <small>
+          By ${d.userId?.username || "Unknown"} on 
+          ${new Date(d.createdAt).toLocaleString()}
+        </small>
+        <p>Status: ${d.answered ? "✅ Answered" : "❓ Not Answered"}</p>
+        <button class="view-btn" data-id="${d._id}">View Details</button>
       </div>
-    `).join("");
+    `
+      )
+      .join("");
+
+    // ✅ Attach click listeners to "View Details" buttons
+    document.querySelectorAll(".view-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const doubtId = btn.getAttribute("data-id");
+        window.location.href = `doubtDetail.html?id=${doubtId}`;
+      });
+    });
   } catch (err) {
     console.error("Error loading doubts:", err);
     doubtsList.innerText = "Failed to load doubts.";
   }
 }
+
