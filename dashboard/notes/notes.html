@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FrostHub - Notes</title>
+  <link rel="stylesheet" href="../dashboard.css">
+</head>
+<body>
+  <header class="header">
+    <h1>FrostHub - Notes</h1>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <ul>
+        <li><a href="../dashboard.html">Dashboard</a></li>
+        <li><a href="../doubts/doubts.html">Doubts</a></li>
+        <li><a href="../timetable/timetable.html">Timetable</a></li>
+        <li><a href="notes.html" class="active">Notes</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+
+    <!-- Content -->
+    <main class="container">
+      <!-- Add Note Form -->
+      <section class="card">
+        <h2>Add Note</h2>
+        <form id="addNoteForm">
+          <input type="text" id="noteTitle" name="title" placeholder="Enter title" required />
+          <select id="noteType" name="type" required>
+            <option value="">Select type</option>
+            <option value="folder">Folder</option>
+            <option value="pdf">PDF</option>
+            <option value="ppt">PPT</option>
+          </select>
+          <input type="url" id="noteUrl" name="url" placeholder="Enter file URL (only for pdf/ppt)" />
+          <button type="submit">Add Note</button>
+        </form>
+      </section>
+
+      <!-- Notes List -->
+      <section class="card">
+        <h2>Group Notes</h2>
+        <!-- Breadcrumbs -->
+        <div id="breadcrumbs" class="breadcrumbs">Root</div>
+        <div id="notesList">Loading notes...</div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../shared/utils.js"></script>
+  <script src="notes.js"></script>
+</body>
+</html>
