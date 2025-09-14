@@ -1,0 +1,141 @@
+/* Import modern font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg1: #0f172a;
+  --bg2: #1e293b;
+  --accent1: #38bdf8;
+  --accent2: #6366f1;
+  --text-light: #f1f5f9;
+  --text-muted: #94a3b8;
+  --radius: 16px;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Animated gradient background */
+body {
+  height: 100vh;
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #0ea5e9, #6366f1);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-light);
+}
+
+/* Container */
+.login-container {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 2rem;
+  border-radius: var(--radius);
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  animation: slideIn 0.8s ease forwards;
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.login-container h1 {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: var(--accent1);
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+}
+
+/* Card sections */
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  animation: fadeIn 0.6s ease;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  color: var(--accent1);
+}
+
+/* Forms */
+input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+  border: none;
+  border-radius: var(--radius);
+  background: #1e293b;
+  color: var(--text-light);
+  transition: 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border: 1px solid var(--accent1);
+  background: #334155;
+}
+
+button {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Divider */
+.divider {
+  margin: 1rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Group code box */
+#groupCodeBox {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #0ea5e9;
+  color: white;
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease;
+}
+.hidden {
+  display: none;
+}
+
+/* Animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes slideIn {
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

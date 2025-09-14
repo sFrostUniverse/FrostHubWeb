@@ -5,40 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FrostHub - Dashboard</title>
   <link rel="stylesheet" href="dashboard.css">
+
+  <!-- Font Awesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <header class="header">
-    <h1>FrostHub Dashboard</h1>
-  </header>
-
   <div class="layout">
-    <!-- Sidebar (always visible on left) -->
+    <!-- Sidebar -->
     <nav id="sidebar" class="sidebar">
-  <ul>
-    <li><a href="dashboard.html">Dashboard</a></li>
-    <li><a href="doubts/doubts.html">Doubts</a></li>
-    <li><a href="timetable/timetable.html">Timetable</a></li>
-    <li><a href="notes/notes.html">Notes</a></li>
-    <li><a href="#" id="logout">Logout</a></li>
-  </ul>
-</nav>
+      <ul>
+        <li><a href="dashboard.html" class="active"><i class="fa-solid fa-house"></i> <span>Dashboard</span></a></li>
+        <li><a href="doubts/doubts.html"><i class="fa-solid fa-question-circle"></i> <span>Doubts</span></a></li>
+        <li><a href="timetable/timetable.html"><i class="fa-solid fa-calendar-days"></i> <span>Timetable</span></a></li>
+        <li><a href="notes/notes.html"><i class="fa-solid fa-book"></i> <span>Notes</span></a></li>
+        <li><a href="#" id="logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a></li>
+      </ul>
+    </nav>
 
+    <!-- Page Content Wrapper (fades in/out) -->
+    <div class="page-wrapper">
+      <header class="header">
+        <button id="sidebarToggle" class="menu-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <h1>FrostHub Dashboard</h1>
+      </header>
 
-    <!-- Main Content -->
-    <main class="container">
-      <!-- Class Status -->
-      <section id="classStatus" class="card">
-        <h2>Class Status</h2>
-        <div id="ongoing">Ongoing: -</div>
-        <div id="upcoming">Upcoming: -</div>
-      </section>
+      <main class="container">
+        <!-- Hero Welcome Section -->
+        <section class="hero-welcome">
+          <h2 id="welcomeMsg"><i class="fa-solid fa-hand-sparkles"></i> Welcome Guest</h2>
+        </section>
 
-      <!-- Today’s Classes -->
-      <section id="todayClasses" class="card">
-        <h2>Today’s Classes</h2>
-        <div id="classesList">Loading...</div>
-      </section>
-    </main>
+        <!-- Dashboard Cards Grid -->
+        <div class="dashboard-grid">
+          <!-- Class Status -->
+          <section id="classStatus" class="card status">
+            <h2><i class="fa-solid fa-chalkboard-teacher"></i> Class Status</h2>
+            <div id="ongoing">Ongoing: -</div>
+            <div id="upcoming">Upcoming: -</div>
+          </section>
+
+          <!-- Today’s Classes -->
+          <section id="todayClasses" class="card today">
+            <h2><i class="fa-solid fa-calendar-day"></i> Today’s Classes</h2>
+            <div id="classesList">Loading...</div>
+          </section>
+        </div>
+      </main>
+    </div>
   </div>
 
   <!-- Scripts -->
@@ -46,5 +63,6 @@
   <script src="dashboard.js"></script>
   <script src="classStatus/classStatus.js"></script>
   <script src="todayClasses/todayClasses.js"></script>
+  <script src="../shared/pageTransition.js"></script>
 </body>
 </html>

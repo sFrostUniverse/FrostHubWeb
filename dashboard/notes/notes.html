@@ -2,57 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FrostHub - Notes</title>
   <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <header class="header">
-    <h1>FrostHub - Notes</h1>
-  </header>
-
   <div class="layout">
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav id="sidebar" class="sidebar">
       <ul>
-        <li><a href="../dashboard.html">Dashboard</a></li>
-        <li><a href="../doubts/doubts.html">Doubts</a></li>
-        <li><a href="../timetable/timetable.html">Timetable</a></li>
-        <li><a href="notes.html" class="active">Notes</a></li>
-        <li><a href="#" id="logout">Logout</a></li>
+        <li><a href="../dashboard.html"><i class="fa-solid fa-house"></i> <span>Dashboard</span></a></li>
+        <li><a href="../doubts/doubts.html"><i class="fa-solid fa-question-circle"></i> <span>Doubts</span></a></li>
+        <li><a href="../timetable/timetable.html"><i class="fa-solid fa-calendar-days"></i> <span>Timetable</span></a></li>
+        <li><a href="notes.html" class="active"><i class="fa-solid fa-book"></i> <span>Notes</span></a></li>
+        <li><a href="#" id="logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a></li>
       </ul>
     </nav>
 
-    <!-- Content -->
-    <main class="container">
-      <!-- Add Note Form -->
-      <section class="card">
-        <h2>Add Note</h2>
-        <form id="addNoteForm">
-          <input type="text" id="noteTitle" name="title" placeholder="Enter title" required />
-          <select id="noteType" name="type" required>
-            <option value="">Select type</option>
-            <option value="folder">Folder</option>
-            <option value="pdf">PDF</option>
-            <option value="ppt">PPT</option>
-          </select>
-          <input type="url" id="noteUrl" name="url" placeholder="Enter file URL (only for pdf/ppt)" />
-          <button type="submit">Add Note</button>
-        </form>
-      </section>
+    <!-- Page Content -->
+    <div class="page-wrapper">
+      <header class="header">
+        <button id="sidebarToggle" class="menu-btn">
+          <span></span><span></span><span></span>
+        </button>
+        <h1><i class="fa-solid fa-book"></i> Notes</h1>
+      </header>
 
-      <!-- Notes List -->
-      <section class="card">
-        <h2>Group Notes</h2>
-        <!-- Breadcrumbs -->
-        <div id="breadcrumbs" class="breadcrumbs">Root</div>
-        <div id="notesList">Loading notes...</div>
-      </section>
-    </main>
+      <main class="container page-cards">
+        <!-- Add Note Form -->
+        <section class="card notes">
+          <h2><i class="fa-solid fa-plus"></i> Add Note</h2>
+          <form id="addNoteForm">
+            <input type="text" id="noteTitle" name="title" placeholder="Enter title" required />
+            <select id="noteType" name="type" required>
+              <option value="">Select type</option>
+              <option value="folder">📂 Folder</option>
+              <option value="pdf">📄 PDF</option>
+              <option value="ppt">📊 PPT</option>
+            </select>
+            <input type="url" id="noteUrl" name="url" placeholder="Enter file URL (only for pdf/ppt)" />
+            <button type="submit"><i class="fa-solid fa-plus"></i> Add Note</button>
+          </form>
+        </section>
+
+        <!-- Notes List -->
+        <section class="card notes">
+          <h2><i class="fa-solid fa-layer-group"></i> Group Notes</h2>
+          <div id="breadcrumbs" class="breadcrumbs"><i class="fa-solid fa-folder"></i> Root</div>
+          <div id="notesList">Loading notes...</div>
+        </section>
+      </main>
+    </div>
   </div>
 
   <!-- Scripts -->
   <script src="../../shared/utils.js"></script>
+  <script src="../../shared/sidebar.js"></script>
   <script src="notes.js"></script>
+  <script src="../../shared/pageTransition.js"></script>
 </body>
 </html>

@@ -1,94 +1,315 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg-dark: #0f172a;
+  --bg-card: rgba(30, 41, 59, 0.7);
+  --accent1: #38bdf8;
+  --accent2: #6366f1;
+  --accent3: #10b981;
+  --accent4: #f43f5e;
+  --text-light: #f1f5f9;
+  --radius: 16px;
+  --sidebar-width: 220px;
+  --sidebar-collapsed: 70px;
+}
+
 /* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Layout */
-.layout {
-  display: flex;
+body {
+  min-height: 100vh;
+  color: var(--text-light);
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #1e1b4b, #312e81);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: #1a1a1a;
-  color: white;
-  height: 100vh;
-  padding-top: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  margin: 15px 0;
-}
-
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  padding: 10px 20px;
-  display: block;
-  transition: background 0.2s;
-}
-
-.sidebar a:hover {
-  background: #333;
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Header */
 .header {
-  background: #222;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  padding: 1rem;
+  font-size: 1.6rem;
+  font-weight: 700;
   color: white;
-  padding: 15px 20px;
-  margin-left: 220px; /* align with sidebar */
-  font-size: 1.2rem;
-  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  position: relative;
 }
 
-/* Main Content */
+/* Hamburger button */
+.menu-btn {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 20;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.menu-btn:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 8px var(--accent1);
+}
+.menu-btn span {
+  width: 24px;
+  height: 3px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+.menu-btn.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+.menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+.menu-btn.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Layout as grid (sidebar + content) */
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  transition: grid-template-columns 0.4s ease;
+  min-height: 100vh;
+}
+.layout.collapsed {
+  grid-template-columns: var(--sidebar-collapsed) 1fr;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 100%;
+  background: rgba(15,23,42,0.95);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.4s ease;
+  padding: 1.2rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar ul {
+  list-style: none;
+}
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  color: var(--text-light);
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+.sidebar a i {
+  font-size: 1.2rem;
+}
+.sidebar a span {
+  transition: opacity 0.25s ease, max-width 0.25s ease;
+}
+.sidebar.collapsed a span {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+}
+.sidebar a:hover {
+  background: rgba(99,102,241,0.2);
+  color: var(--accent1);
+}
+.sidebar a.active {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Container */
 .container {
-  margin-left: 240px; /* push content right of sidebar */
-  padding: 20px;
-  width: calc(100% - 240px);
+  padding: 2rem;
+  transition: all 0.4s ease;
+}
+
+/* Hero Welcome Section */
+.hero-welcome {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.hero-welcome h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Dashboard grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
 /* Cards */
 .card {
-  background: #f5f5f5;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  color: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .card h2 {
-  margin-bottom: 10px;
   font-size: 1.2rem;
-  color: #333;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.6);
 }
 
-.card div,
-.card ul,
-.card p {
-  font-size: 0.95rem;
-  color: #444;
+/* Specific cards */
+.card.status {
+  background: linear-gradient(135deg, var(--accent2), var(--accent4));
+}
+.card.today {
+  background: linear-gradient(135deg, var(--accent3), var(--accent1));
 }
 
-/* Lists */
-ul {
-  margin-top: 10px;
-  padding-left: 20px;
+/* --- Smooth Page Fade (only content, not sidebar) --- */
+.page-wrapper {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+.page-wrapper.fade-in {
+  opacity: 1;
 }
 
-li {
-  margin-bottom: 5px;
+
+/* --- Card & Hero Entry (staggered) --- */
+.hero-welcome, .card {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeSlideIn 0.5s ease forwards;
 }
+.hero-welcome { animation-delay: 0.05s; }
+.card:nth-child(1) { animation-delay: 0.12s; }
+.card:nth-child(2) { animation-delay: 0.22s; }
+.card:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Doubts cards */
+.card.doubt {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+}
+
+/* Timetable cards */
+.card.timetable {
+  background: linear-gradient(135deg, var(--accent3), var(--accent1));
+}
+
+/* Notes cards */
+.card.notes {
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+}
+/* General card layout for all pages (not just dashboard) */
+/* Only apply grid layout to non-dashboard pages */
+.page-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem; /* spacing between cards */
+  max-width: 900px;  /* keeps cards centered, not full width */
+  margin: 0 auto;    /* center align */
+}
+
+@media (min-width: 768px) {
+  .page-cards {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+/* ---- Form Styling (applies to all pages: doubts, notes, timetable) ---- */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Inputs, selects, textarea */
+input, select, textarea {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-light);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+input:focus, select:focus, textarea:focus {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 2px var(--accent1);
+}
+
+/* Buttons */
+button {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+/* Special smaller inline button (like "Add") */
+form button {
+  align-self: flex-start;
+}
+
+

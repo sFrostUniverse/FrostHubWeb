@@ -4,54 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FrostHub - Doubt Detail</title>
-  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="../dashboard.css"> <!-- base styles -->
+  <link rel="stylesheet" href="doubtDetail.css"> <!-- page-specific styles -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <header class="header">
-    <h1>Doubt Detail</h1>
-  </header>
-
   <div class="layout">
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav id="sidebar" class="sidebar">
       <ul>
-        <li><a href="../dashboard.html">Dashboard</a></li>
-        <li><a href="doubts.html">Doubts</a></li>
-        <li><a href="../timetable/timetable.html">Timetable</a></li>
-        <li><a href="../notes/notes.html">Notes</a></li>
-        <li><a href="#" id="logout">Logout</a></li>
+        <li><a href="../dashboard.html"><i class="fa-solid fa-house"></i> <span>Dashboard</span></a></li>
+        <li><a href="doubts.html" class="active"><i class="fa-solid fa-question-circle"></i> <span>Doubts</span></a></li>
+        <li><a href="../timetable/timetable.html"><i class="fa-solid fa-calendar-days"></i> <span>Timetable</span></a></li>
+        <li><a href="../notes/notes.html"><i class="fa-solid fa-book"></i> <span>Notes</span></a></li>
+        <li><a href="#" id="logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a></li>
       </ul>
     </nav>
 
-    <!-- Main content -->
-    <main class="container">
-      <section class="card">
-        <h2 id="doubtTitle">Loading...</h2>
-        <p id="doubtDescription"></p>
-        <small id="doubtMeta"></small>
-        <p>Status: <span id="doubtStatus"></span></p>
-        <button id="deleteDoubtBtn" style="background:red;color:white;display:none;">
-          Delete Doubt
+    <!-- Page Content Wrapper -->
+    <div class="page-wrapper">
+      <header class="header">
+        <button id="sidebarToggle" class="menu-btn">
+          <span></span><span></span><span></span>
         </button>
-      </section>
+        <h1><i class="fa-solid fa-question"></i> Doubt Details</h1>
+      </header>
 
-      <section class="card">
-        <h3>Answers</h3>
-        <div id="answersList">Loading...</div>
-      </section>
+      <main class="container">
+        <!-- Doubt Details -->
+        <section class="card">
+          <h2 id="doubtTitle">Loading...</h2>
+          <p id="doubtDescription"></p>
+          <p id="doubtMeta"></p>
+          <p id="doubtStatus"></p>
+          <button id="deleteDoubtBtn" style="display:none; background: red; color: white; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer;">
+            <i class="fa-solid fa-trash"></i> Delete Doubt
+          </button>
+        </section>
 
-      <section class="card">
-        <h3>Post an Answer</h3>
-        <form id="answerForm">
-          <textarea id="answerText" placeholder="Write your answer..." required></textarea>
-          <input type="file" id="answerImage" accept="image/*">
-          <button type="submit">Submit Answer</button>
-        </form>
-      </section>
-    </main>
+        <!-- Answers -->
+        <section class="card">
+          <h2><i class="fa-solid fa-comments"></i> Answers</h2>
+          <div id="answersList">Loading...</div>
+        </section>
+
+        <!-- Add Answer -->
+        <section class="card">
+          <h2><i class="fa-solid fa-plus"></i> Add Answer</h2>
+          <form id="answerForm">
+            <textarea id="answerText" placeholder="Write your answer..." rows="3" required></textarea>
+            <input type="file" id="answerImage" accept="image/*" />
+            <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
+          </form>
+        </section>
+      </main>
+    </div>
   </div>
 
+  <!-- Scripts -->
   <script src="../../shared/utils.js"></script>
+  <script src="../../shared/sidebar.js"></script>
   <script src="doubtDetail.js"></script>
+  <script src="../../shared/pageTransition.js"></script>
 </body>
 </html>

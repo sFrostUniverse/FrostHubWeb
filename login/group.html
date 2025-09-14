@@ -4,25 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FrostHub - Group Selection</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Select Your Group</h1>
+  <div class="login-container">
+    <h1>Join or Create a Group</h1>
 
-    <h3>Create Group</h3>
-    <form id="createGroupForm">
-      <input type="text" id="groupName" placeholder="Group Name" required>
-      <button type="submit">Create</button>
-    </form>
+    <!-- Create Group -->
+    <section class="card">
+      <h2>Create Group</h2>
+      <form id="createGroupForm">
+        <input type="text" id="groupName" placeholder="Enter Group Name" required>
+        <button type="submit">Create</button>
+      </form>
+      <!-- Group code display -->
+      <div id="groupCodeBox" class="hidden"></div>
+    </section>
 
     <div class="divider">or</div>
 
-    <h3>Join Group</h3>
-    <form id="joinGroupForm">
-      <input type="text" id="groupCode" placeholder="Group Code" required>
-      <button type="submit">Join</button>
-    </form>
+    <!-- Join Group -->
+    <section class="card">
+      <h2>Join Group</h2>
+      <form id="joinGroupForm">
+        <input type="text" id="groupCode" placeholder="Enter Group Code" required>
+        <button type="submit">Join</button>
+      </form>
+    </section>
   </div>
 
   <script src="script.js"></script>

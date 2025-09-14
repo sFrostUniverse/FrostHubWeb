@@ -45,13 +45,13 @@ async function checkUserGroup() {
     if (user.groupId) {
       localStorage.setItem("groupId", user.groupId);
       localStorage.setItem("role", user.role);
-      window.location.href = "/FrostHubWeb/dashboard/dashboard.html"; // ✅ absolute path
+      window.location.href = "/FrostHubWeb/dashboard/dashboard.html";
     } else {
-      window.location.href = "/FrostHubWeb/login/group.html"; // ✅ absolute path
+      window.location.href = "/FrostHubWeb/login/group.html";
     }
   } catch (err) {
     localStorage.clear();
-    window.location.href = "/FrostHubWeb/login/login.html"; // ✅ absolute path
+    window.location.href = "/FrostHubWeb/login/login.html";
   }
 }
 
@@ -64,7 +64,7 @@ if (createGroupForm) {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`${API_BASE}/groups`, {
+      const res = await fetch(`${API_BASE}/groups/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,8 +76,24 @@ if (createGroupForm) {
       if (!res.ok) throw new Error("Failed to create group");
       const data = await res.json();
 
-      localStorage.setItem("groupId", data._id || data.groupId);
-      window.location.href = "/FrostHubWeb/dashboard/dashboard.html"; // ✅ absolute path
+      localStorage.setItem("groupId", data.group._id);
+
+      // ✅ Show group code
+      if (data.group.groupCode) {
+        const box = document.getElementById("groupCodeBox");
+        if (box) {
+          box.classList.remove("hidden");
+          box.innerText = `Your Group Code: ${data.group.groupCode}`;
+        } else {
+          alert(`Your Group Code: ${data.group.groupCode}`);
+        }
+      }
+
+      // ✅ Redirect after 3s
+      setTimeout(() => {
+        window.location.href = "/FrostHubWeb/dashboard/dashboard.html";
+      }, 3000);
+
     } catch (err) {
       alert(err.message);
     }
@@ -105,8 +121,8 @@ if (joinGroupForm) {
       if (!res.ok) throw new Error("Failed to join group");
       const data = await res.json();
 
-      localStorage.setItem("groupId", data._id || data.groupId);
-      window.location.href = "/FrostHubWeb/dashboard/dashboard.html"; // ✅ absolute path
+      localStorage.setItem("groupId", data.group._id || data.groupId);
+      window.location.href = "/FrostHubWeb/dashboard/dashboard.html";
     } catch (err) {
       alert(err.message);
     }
@@ -127,6 +143,6 @@ const logoutBtn = document.getElementById("logout");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     localStorage.clear();
-    window.location.href = "/FrostHubWeb/login/login.html"; // ✅ absolute path
+    window.location.href = "/FrostHubWeb/login/login.html";
   });
 }

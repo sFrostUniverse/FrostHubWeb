@@ -1,0 +1,106 @@
+/* Doubt Detail Page Styles */
+
+/* Doubt metadata */
+#doubtMeta {
+  display: block;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+#doubtStatus {
+  font-weight: 600;
+  margin: 0.5rem 0 1rem;
+}
+
+/* Delete doubt button */
+#deleteDoubtBtn {
+  margin-top: 1rem;
+  background: var(--accent4);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+#deleteDoubtBtn:hover {
+  background: #e11d48;
+}
+
+/* Answers list */
+#answersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.answer-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.answer-card p {
+  margin-bottom: 0.5rem;
+}
+.answer-card img {
+  display: block;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  max-width: 250px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.answer-card small {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+.answer-card button {
+  margin-top: 0.5rem;
+  background: var(--accent4);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.answer-card button:hover {
+  background: #dc2626;
+}
+
+/* Answer form */
+#answerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+#answerForm textarea {
+  resize: vertical;
+  min-height: 100px;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+#answerForm input[type="file"] {
+  color: white;
+}
+#answerForm button {
+  align-self: flex-start;
+  background: var(--accent3);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+#answerForm button:hover {
+  background: #059669;
+}

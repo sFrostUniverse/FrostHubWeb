@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FrostHub - Timetable</title>
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar">
+      <ul>
+        <li><a href="../dashboard.html"><i class="fa-solid fa-house"></i> <span>Dashboard</span></a></li>
+        <li><a href="../doubts/doubts.html"><i class="fa-solid fa-question-circle"></i> <span>Doubts</span></a></li>
+        <li><a href="timetable.html" class="active"><i class="fa-solid fa-calendar-days"></i> <span>Timetable</span></a></li>
+        <li><a href="../notes/notes.html"><i class="fa-solid fa-book"></i> <span>Notes</span></a></li>
+        <li><a href="#" id="logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-wrapper">
+      <header class="header">
+        <button id="sidebarToggle" class="menu-btn">
+          <span></span><span></span><span></span>
+        </button>
+        <h1><i class="fa-solid fa-calendar-days"></i> Timetable</h1>
+      </header>
+
+      <main class="container page-cards">
+        <!-- Add Timetable Entry -->
+        <section class="card timetable">
+          <h2><i class="fa-solid fa-plus"></i> Add Timetable Entry</h2>
+          <form id="addTimetableForm">
+            <select id="day" name="day" required>
+              <option value="">📅 Select Day</option>
+              <option value="monday">Monday</option>
+              <option value="tuesday">Tuesday</option>
+              <option value="wednesday">Wednesday</option>
+              <option value="thursday">Thursday</option>
+              <option value="friday">Friday</option>
+              <option value="saturday">Saturday</option>
+              <option value="sunday">Sunday</option>
+            </select>
+            <input type="text" id="subject" name="subject" placeholder="📘 Subject" required />
+            <input type="text" id="teacher" name="teacher" placeholder="👨‍🏫 Teacher" required />
+            <input type="text" id="time" name="time" placeholder="⏰ Time (e.g. 10:00 AM)" required />
+            <button type="submit"><i class="fa-solid fa-plus"></i> Add</button>
+          </form>
+        </section>
+
+        <!-- Weekly Timetable -->
+        <section class="card timetable">
+          <h2><i class="fa-solid fa-calendar-week"></i> Weekly Timetable</h2>
+          <div id="timetableContainer">Loading timetable...</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../shared/utils.js"></script>
+  <script src="../../shared/sidebar.js"></script>
+  <script src="timetable.js"></script>
+  <script src="../../shared/pageTransition.js"></script>
+</body>
+</html>

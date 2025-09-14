@@ -76,7 +76,6 @@ window.addEventListener("DOMContentLoaded", () => {
               ? `<a href="${n.url}" target="_blank">Open File</a>`
               : ""
           }
-          <button class="delete-btn" data-id="${n._id}">Delete</button>
           ${
             n.type === "folder"
               ? `<button class="open-btn" data-id="${n._id}" data-title="${n.title}">Open</button>`
@@ -86,11 +85,6 @@ window.addEventListener("DOMContentLoaded", () => {
       `
         )
         .join("");
-
-      // ✅ Attach listeners for delete
-      document.querySelectorAll(".delete-btn").forEach((btn) => {
-        btn.addEventListener("click", () => deleteNote(btn.dataset.id));
-      });
 
       // ✅ Attach listeners for folder open
       document.querySelectorAll(".open-btn").forEach((btn) => {
@@ -104,29 +98,6 @@ window.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Error loading notes:", err);
       notesList.innerText = "Failed to load notes.";
-    }
-  }
-
-  // 🔹 Delete note
-  async function deleteNote(noteId) {
-    const token = localStorage.getItem("token");
-    if (!token) return alert("Not logged in!");
-
-    if (!confirm("Are you sure you want to delete this note?")) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/notes/${noteId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) throw new Error("Failed to delete note");
-      await res.json();
-
-      loadNotes(groupId, currentParentId);
-    } catch (err) {
-      console.error("Error deleting note:", err);
-      alert("Failed to delete note.");
     }
   }
 
