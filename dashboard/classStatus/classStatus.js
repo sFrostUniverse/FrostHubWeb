@@ -7,6 +7,18 @@ function parseTimeRange(timeStr) {
   };
 }
 
+// Helper: update the badge inside ongoing/upcoming row
+function setStatus(id, text, type) {
+  const row = document.getElementById(id);
+  if (!row) return;
+
+  const badge = row.querySelector(".status-badge");
+  if (!badge) return;
+
+  badge.textContent = text;
+  badge.className = `status-badge ${type}`;
+}
+
 async function loadClassStatus() {
   const groupId = localStorage.getItem("groupId");
   if (!groupId) return;
@@ -17,8 +29,8 @@ async function loadClassStatus() {
     const timetable = await apiFetch(`/groups/${groupId}/timetable?day=${today.toLowerCase()}`);
 
     if (!timetable || timetable.length === 0) {
-      document.getElementById("ongoing").innerText = "No classes scheduled today";
-      document.getElementById("upcoming").innerText = "";
+      setStatus("ongoing", "None", "status-none");
+      setStatus("upcoming", "None", "status-none");
       return;
     }
 
@@ -36,19 +48,29 @@ async function loadClassStatus() {
       }
     }
 
-    document.getElementById("ongoing").innerText =
-      ongoing
-        ? `Ongoing: ${ongoing.subject} (${ongoing.time}) in ${ongoing.teacher}`
-        : "No ongoing class";
+    if (ongoing) {
+      const [startTime] = ongoing.time.split("-");
+      setStatus("ongoing", `${ongoing.subject} (${startTime})`, "status-ongoing");
+    } else {
+      setStatus("ongoing", "None", "status-none");
+    }
 
-    document.getElementById("upcoming").innerText =
-      upcoming
-        ? `Upcoming: ${upcoming.subject} at ${upcoming.time.split("-")[0]} in ${upcoming.teacher}`
-        : "No more classes today";
+    if (upcoming) {
+      const [startTime] = upcoming.time.split("-");
+      setStatus("upcoming", `${upcoming.subject} at ${startTime}`, "status-upcoming");
+    } else {
+      setStatus("upcoming", "None", "status-none");
+    }
 
   } catch (err) {
     console.error("ClassStatus error:", err);
-    document.getElementById("ongoing").innerText = "Failed to load class status";
-    document.getElementById("upcoming").innerText = "";
+    setStatus("ongoing", "Error", "status-none");
+    setStatus("upcoming", "-", "status-none");
   }
 }
+
+// Run on load + auto refresh every minute
+document.addEventListener("DOMContentLoaded", () => {
+  loadClassStatus();
+  setInterval(loadClassStatus, 60000);
+});

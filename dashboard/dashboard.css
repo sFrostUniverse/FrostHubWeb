@@ -63,11 +63,14 @@ body {
   z-index: 20;
   padding: 6px;
   border-radius: 8px;
+  line-height: 0;           /* 🔹 prevents vertical shift */
+  height: fit-content;      /* 🔹 lock size so hover doesn’t expand */
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 .menu-btn:hover {
   background: rgba(255,255,255,0.2);
   box-shadow: 0 0 8px var(--accent1);
+  transform: translateY(-50%); /* 🔹 keep it locked in center on hover */
 }
 .menu-btn span {
   width: 24px;
@@ -76,6 +79,7 @@ body {
   border-radius: 3px;
   transition: all 0.3s ease;
 }
+
 .menu-btn.active span:nth-child(1) {
   transform: rotate(45deg) translate(6px, 6px);
 }
@@ -204,6 +208,56 @@ body {
   background: linear-gradient(135deg, var(--accent3), var(--accent1));
 }
 
+/* --- Class Status card --- */
+#classStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  font-size: 1rem;
+}
+
+#classStatus h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* line container for ongoing/upcoming */
+#classStatus .status-row {
+  display: flex;
+  justify-content: space-between; /* pushes label left, badge right */
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius);
+}
+
+/* badge styles */
+.status-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+}
+
+.status-ongoing {
+  background: rgba(16,185,129,0.15); /* green */
+  color: #34d399;
+}
+
+.status-upcoming {
+  background: rgba(59,130,246,0.15); /* blue */
+  color: #60a5fa;
+}
+
+.status-none {
+  background: rgba(255,255,255,0.05);
+  color: #9ca3af;
+}
+
+
 /* --- Smooth Page Fade (only content, not sidebar) --- */
 .page-wrapper {
   opacity: 0;
@@ -311,5 +365,12 @@ button:hover {
 form button {
   align-self: flex-start;
 }
-
-
+/* Smooth fade for injected content */
+#page-container.fade-out {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#page-container.fade-in {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}

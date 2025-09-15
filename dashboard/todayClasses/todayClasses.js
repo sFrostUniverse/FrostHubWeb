@@ -15,26 +15,47 @@ async function loadTodayClasses() {
 
   try {
     const timetable = await apiFetch(`/groups/${groupId}/timetable?day=${today.toLowerCase()}`);
-    const now = new Date();
-
-    const remaining = timetable.filter(cls => parseTimeRange(cls.time).start > now);
     const classesList = document.getElementById("classesList");
 
-    if (!remaining || remaining.length === 0) {
-      classesList.innerText = "No classes left today!";
+    if (!timetable || timetable.length === 0) {
+      classesList.innerText = "No classes scheduled today!";
       return;
     }
 
-    classesList.innerHTML = `
-      <p>${remaining.length} classes left today:</p>
-      <ul>
-        ${remaining
-          .map(cls => `<li>${cls.subject} at ${cls.time.split("-")[0]} in ${cls.teacher}</li>`)
-          .join("")}
-      </ul>
-    `;
+    const now = new Date();
+    classesList.innerHTML = ""; // clear old
+
+    const ul = document.createElement("ul");
+    timetable.forEach(cls => {
+      const { start, end } = parseTimeRange(cls.time);
+
+      let status = "Past";
+      let badgeClass = "status-none";
+
+      if (now >= start && now <= end) {
+        status = "Ongoing";
+        badgeClass = "status-ongoing";
+      } else if (start > now) {
+        status = "Upcoming";
+        badgeClass = "status-upcoming";
+      }
+
+      const li = document.createElement("li");
+      li.classList.add("class-row"); // styling hook
+
+      li.innerHTML = `
+        <span>${cls.subject} (${cls.teacher}) @ ${cls.time.split("-")[0]}</span>
+        <span class="status-badge ${badgeClass}">${status}</span>
+      `;
+      ul.appendChild(li);
+    });
+
+    classesList.appendChild(ul);
+
   } catch (err) {
     console.error("TodayClasses error:", err);
     document.getElementById("classesList").innerText = "Failed to load today’s classes";
   }
 }
+
+document.addEventListener("DOMContentLoaded", loadTodayClasses);
