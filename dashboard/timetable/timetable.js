@@ -37,9 +37,13 @@ window.addEventListener("DOMContentLoaded", () => {
         if (byDay[e.day]) byDay[e.day].push(e);
       });
 
-      // Collect unique time slots
+      // Collect unique time slots (sorted properly)
       const allTimes = [
-        ...new Set(allEntries.map((e) => e.time).sort()),
+        ...new Set(
+          allEntries
+            .map((e) => e.time)
+            .sort((a, b) => a.localeCompare(b, "en", { numeric: true }))
+        ),
       ];
 
       // Build table
@@ -58,7 +62,11 @@ window.addEventListener("DOMContentLoaded", () => {
         html += `<tr><td class="time-slot">${time}</td>`;
         days.forEach((day) => {
           const entry = byDay[day].find((e) => e.time === time);
-          html += `<td>${entry ? `<strong>${entry.subject}</strong><br><em>${entry.teacher}</em>` : "-"}</td>`;
+          html += `<td>${
+            entry
+              ? `<strong>${entry.subject}</strong><br><em>${entry.teacher}</em>`
+              : "-"
+          }</td>`;
         });
         html += `</tr>`;
       });

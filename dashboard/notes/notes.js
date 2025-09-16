@@ -76,13 +76,16 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // 🔹 Breadcrumbs
-  function updateBreadcrumbs() {
+    function updateBreadcrumbs() {
+    // Root only
     if (navStack.length === 0) {
       breadcrumbs.innerHTML = `Root`;
       return;
     }
 
+    // Add back link
     breadcrumbs.innerHTML =
+      `<span class="back-link">← Back</span>` +
       `Root → ` +
       navStack
         .map(
@@ -91,6 +94,18 @@ window.addEventListener("DOMContentLoaded", () => {
         )
         .join(" → ");
 
+    // Back button click
+    const backBtn = breadcrumbs.querySelector(".back-link");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        navStack.pop(); // go one level back
+        currentParentId = navStack.length > 0 ? navStack[navStack.length - 1].id : null;
+        updateBreadcrumbs();
+        loadNotes(groupId, currentParentId);
+      });
+    }
+
+    // Crumb clicks
     document.querySelectorAll(".crumb").forEach((crumb) => {
       crumb.addEventListener("click", () => {
         const idx = parseInt(crumb.dataset.index);
@@ -101,4 +116,5 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
 });

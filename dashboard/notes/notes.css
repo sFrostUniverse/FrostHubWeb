@@ -2,6 +2,14 @@
    Notes Page Styling
    Extends dashboard.css theme
 ============================ */
+/* Notes page container (left aligned) */
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left align */
+  gap: 1rem;
+  max-width: 800px; /* keep notes readable */
+}
 
 /* Breadcrumbs */
 .breadcrumbs {
@@ -82,3 +90,16 @@
   font-size: 0.8rem;
   opacity: 0.6;
 }
+/* Back link inside breadcrumbs */
+.breadcrumbs .back-link {
+  margin-right: 1rem;
+  cursor: pointer;
+  color: var(--accent1);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+.breadcrumbs .back-link:hover {
+  color: var(--accent2);
+}
+
+

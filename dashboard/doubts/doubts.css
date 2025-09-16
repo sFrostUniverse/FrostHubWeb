@@ -211,3 +211,10 @@
   border-radius: var(--radius);
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
+.container h2 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

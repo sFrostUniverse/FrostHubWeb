@@ -18,11 +18,22 @@ async function apiFetch(url, options = {}) {
 
   console.log("⬅️ API Response status:", res.status);
 
+  // 🔹 Handle expired or missing auth globally
+  if (res.status === 401) {
+    localStorage.clear();
+    window.location.href = "/FrostHubWeb/login/login.html";
+    return; // stop execution
+  }
+
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
 }
 
+// ✅ Global guard: if no token at all, redirect from protected pages
+if (!localStorage.getItem("token") && !window.location.href.includes("login")) {
+  window.location.href = "/FrostHubWeb/login/login.html";
+}
 
 // Make it available everywhere
 window.apiFetch = apiFetch;
-window.API_BASE = API_BASE;   // 👈 Add this line
+window.API_BASE = API_BASE;
