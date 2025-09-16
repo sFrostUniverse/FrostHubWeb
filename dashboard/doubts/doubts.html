@@ -39,8 +39,10 @@
     </div>
   </div>
 
-  <!-- Floating Action Button -->
-  <button id="fabAddDoubt" class="fab"><i class="fa-solid fa-question"></i></button>
+  <!-- Floating Add Doubt Button -->
+  <button id="fabAddDoubt" class="fab">
+    <i class="fa-solid fa-plus"></i> <span>Add Doubt</span>
+  </button>
 
   <!-- Add Doubt Overlay -->
   <div id="addDoubtOverlay" class="add-doubt-overlay">
@@ -50,14 +52,14 @@
       <input type="text" id="doubtTitle" name="title" placeholder="Enter doubt title" required />
       <textarea id="doubtDescription" name="description" placeholder="Enter description..." rows="3" required></textarea>
 
-      <div class="file-input-wrapper">
-        <label class="file-input-label" for="doubtImage">
-          <i class="fa-solid fa-paperclip"></i> Attach file
-        </label>
-        <input type="file" id="doubtImage" name="image" accept="image/*" />
+      <!-- Drag & Drop Zone -->
+      <div id="dropZone" class="drop-zone">
+        <p><i class="fa-solid fa-cloud-arrow-up"></i> Drop file here or click to upload</p>
+        <input type="file" id="doubtImage" name="image" accept="image/*">
       </div>
+      <div id="filePreview" class="file-preview"></div>
 
-      <button type="submit"><i class="fa-solid fa-plus"></i> Submit</button>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit</button>
     </form>
   </div>
 

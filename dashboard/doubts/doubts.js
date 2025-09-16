@@ -2,6 +2,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const groupId = localStorage.getItem("groupId");
   const doubtsList = document.getElementById("doubtsList");
   const askForm = document.getElementById("addDoubtForm");
+  const fab = document.getElementById("fabAddDoubt");
+  const addOverlay = document.getElementById("addDoubtOverlay");
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("doubtImage");
+  const filePreview = document.getElementById("filePreview");
 
   if (!groupId) {
     doubtsList.innerText = "No group found. Please join a group first.";
@@ -11,7 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Load doubts on page load
   loadDoubts(groupId);
 
-  // Handle add doubt form
+  // Add Doubt form submit
   askForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -21,7 +26,7 @@ window.addEventListener("DOMContentLoaded", () => {
     formData.append("title", document.getElementById("doubtTitle").value);
     formData.append("description", document.getElementById("doubtDescription").value);
 
-    const file = document.getElementById("doubtImage").files[0];
+    const file = fileInput.files[0];
     if (file) formData.append("image", file);
 
     try {
@@ -35,31 +40,27 @@ window.addEventListener("DOMContentLoaded", () => {
       await res.json();
 
       askForm.reset();
+      filePreview.innerHTML = "";
       loadDoubts(groupId);
 
-      // Close overlay after submit
-      document.getElementById("addDoubtOverlay").classList.remove("show");
+      // Close overlay
+      addOverlay.classList.remove("show");
     } catch (err) {
       console.error("Error asking doubt:", err);
       alert("Failed to submit doubt.");
     }
   });
 
-  // FAB overlay logic
-  const fab = document.getElementById("fabAddDoubt");
-  const addOverlay = document.getElementById("addDoubtOverlay");
+  // FAB toggle
   if (fab && addOverlay) {
     const overlayClose = addOverlay.querySelector(".close");
-
-    fab.addEventListener("click", () => {
+    fab.addEventListener("click", (e) => {
+      e.stopPropagation();
       addOverlay.classList.toggle("show");
     });
-
     overlayClose.addEventListener("click", () => {
       addOverlay.classList.remove("show");
     });
-
-    // Close when clicking outside overlay
     document.addEventListener("click", (e) => {
       if (
         addOverlay.classList.contains("show") &&
@@ -70,9 +71,34 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Drag & Drop
+  if (dropZone) {
+    dropZone.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragging");
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragging");
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragging");
+      fileInput.files = e.dataTransfer.files;
+      showFilePreview(fileInput.files[0]);
+    });
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files[0]) showFilePreview(fileInput.files[0]);
+    });
+  }
+
+  function showFilePreview(file) {
+    filePreview.innerHTML = `<p><i class="fa-solid fa-file"></i> ${file.name}</p>`;
+  }
 });
 
-// Fetch and render doubts
+// Load doubts
 async function loadDoubts(groupId) {
   const doubtsList = document.getElementById("doubtsList");
   try {
@@ -88,10 +114,7 @@ async function loadDoubts(groupId) {
       <div class="doubt-item" data-id="${d._id}">
         <h3>${d.title}</h3>
         <p>${d.description.length > 100 ? d.description.slice(0, 100) + "..." : d.description}</p>
-        <small>
-          By ${d.userId?.username || "Unknown"} • 
-          ${new Date(d.createdAt).toLocaleString()}
-        </small>
+        <small>By ${d.userId?.username || "Unknown"} • ${new Date(d.createdAt).toLocaleString()}</small>
       </div>
     `
       )
@@ -110,6 +133,7 @@ async function loadDoubts(groupId) {
   }
 }
 
+// Doubt details modal
 function showDoubtDetails(doubt) {
   const modal = document.getElementById("doubtDetailModal");
   const content = document.getElementById("doubtDetailContent");
@@ -122,10 +146,9 @@ function showDoubtDetails(doubt) {
         ? `<img src="${doubt.imageUrl}" alt="Doubt image" style="max-width:100%; margin-top:10px;">`
         : ""
     }
-    <small>
-      By ${doubt.userId?.username || "Unknown"} on 
-      ${new Date(doubt.createdAt).toLocaleString()}
-    </small>
+    <small>By ${doubt.userId?.username || "Unknown"} on ${new Date(
+    doubt.createdAt
+  ).toLocaleString()}</small>
     <p>Status: ${doubt.answered ? "✅ Answered" : "❓ Not Answered"}</p>
   `;
 
