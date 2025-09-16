@@ -294,3 +294,100 @@
 #deleteDoubtBtn:hover {
   background: rgba(239, 68, 68, 0.35);
 }
+/* Answer card collapsed/expanded */
+.answer-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  max-height: 80px; /* collapsed size */
+  transition: max-height 0.4s ease, background 0.2s ease;
+}
+.answer-card:hover {
+  background: rgba(255,255,255,0.08);
+}
+.answer-card.expanded {
+  max-height: 500px; /* expanded size */
+}
+.answer-card p {
+  margin: 0.2rem 0;
+}
+.answer-card small {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.answer-card img {
+  display: block;
+  margin-top: 0.5rem;
+  max-width: 100%;
+  border-radius: var(--radius);
+}
+/* ============================
+   Answer Form Styling (matches Add Doubt)
+============================ */
+#answerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+#answerForm textarea {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-light);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+#answerForm textarea::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+#answerForm textarea:focus {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 2px var(--accent1);
+}
+
+/* File input styled like drop-zone */
+#answerForm .file-input {
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+#answerForm .file-input:hover {
+  border-color: var(--accent1);
+  background: rgba(255,255,255,0.05);
+}
+#answerForm input[type="file"] {
+  display: none;
+}
+#answerFilePreview {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  opacity: 0.85;
+}
+
+/* Submit Answer Button */
+#answerForm button[type="submit"] {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+#answerForm button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}

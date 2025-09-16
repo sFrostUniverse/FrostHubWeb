@@ -78,11 +78,19 @@
         <div id="answersList">No answers yet.</div>
 
         <!-- Answer form -->
-        <form id="answerForm" enctype="multipart/form-data">
+        <form id="answerForm">
           <textarea id="answerText" placeholder="Your answer..." required></textarea>
-          <input type="file" id="answerImage" accept="image/*" />
+
+          <!-- File drop-style input -->
+          <div class="file-input" id="answerDropZone">
+            <p><i class="fa-solid fa-cloud-arrow-up"></i> Drop file here or click to upload</p>
+            <input type="file" id="answerImage" accept="image/*">
+          </div>
+          <div id="answerFilePreview"></div>
+
           <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
         </form>
+
 
         <!-- Delete doubt button -->
         <button id="deleteDoubtBtn" style="display:none;color:white;background:red;margin-top:10px;">

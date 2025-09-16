@@ -76,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ---- Drag & Drop ----
+  // ---- Drag & Drop (Add Doubt) ----
   if (dropZone) {
     dropZone.addEventListener("click", () => fileInput.click());
     dropZone.addEventListener("dragover", (e) => {
@@ -91,21 +91,12 @@ window.addEventListener("DOMContentLoaded", () => {
       dropZone.classList.remove("dragging");
       if (e.dataTransfer.files.length) {
         fileInput.files = e.dataTransfer.files;
-        showFilePreview(fileInput.files[0]);
+        showFilePreview(fileInput.files[0], filePreview);
       }
     });
     fileInput.addEventListener("change", () => {
-      if (fileInput.files[0]) showFilePreview(fileInput.files[0]);
+      if (fileInput.files[0]) showFilePreview(fileInput.files[0], filePreview);
     });
-  }
-
-  function showFilePreview(file) {
-    const sizeKB = (file.size / 1024).toFixed(1);
-    filePreview.innerHTML = `
-      <p style="animation: fadeIn 0.3s;">
-        <i class="fa-solid fa-file"></i> ${file.name} <small>(${sizeKB} KB)</small>
-      </p>
-    `;
   }
 });
 
@@ -181,19 +172,21 @@ async function openDoubtModal(doubtId) {
       }</p>
 
       <h3>Answers</h3>
-      <div id="answersList">${
-        doubt.answers?.length ? "" : "No answers yet."
-      }</div>
+      <div id="answersList">${doubt.answers?.length ? "" : "No answers yet."}</div>
 
       <form id="answerForm" enctype="multipart/form-data">
         <textarea id="answerText" placeholder="Your answer..." required></textarea>
-        <input type="file" id="answerImage" accept="image/*" />
-        <button type="submit">Submit Answer</button>
+
+        <div class="file-input" id="answerDropZone">
+          <p><i class="fa-solid fa-cloud-arrow-up"></i> Drop file here or click to upload</p>
+          <input type="file" id="answerImage" accept="image/*" />
+        </div>
+        <div id="answerFilePreview"></div>
+
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
       </form>
 
-      <button id="deleteDoubtBtn" style="display:none;color:white;background:red;margin-top:10px;">
-        Delete Doubt
-      </button>
+      <button id="deleteDoubtBtn" style="display:none;">Delete Doubt</button>
     `;
 
     // Show delete button if owner
@@ -211,7 +204,7 @@ async function openDoubtModal(doubtId) {
             <p>${a.text}</p>
             ${
               a.imageUrl
-                ? `<img src="${a.imageUrl}" alt="Answer image" style="max-width:200px;">`
+                ? `<img src="${a.imageUrl}" alt="Answer image">`
                 : ""
             }
             <small>By ${a.createdBy?.username || "Unknown"} on ${new Date(
@@ -219,7 +212,7 @@ async function openDoubtModal(doubtId) {
           ).toLocaleString()}</small>
             ${
               a.createdBy?._id === userId || doubt.userId?._id === userId
-                ? `<button class="delete-answer-btn" data-id="${a._id}" style="color:white;background:red;">Delete Answer</button>`
+                ? `<button class="delete-answer-btn" data-id="${a._id}">Delete Answer</button>`
                 : ""
             }
           </div>
@@ -227,9 +220,19 @@ async function openDoubtModal(doubtId) {
         )
         .join("");
 
+      // Expand/collapse answers
+      answersList.querySelectorAll(".answer-card").forEach((card) => {
+        card.addEventListener("click", (e) => {
+          if (!e.target.classList.contains("delete-answer-btn")) {
+            card.classList.toggle("expanded");
+          }
+        });
+      });
+
       // Delete answer
       answersList.querySelectorAll(".delete-answer-btn").forEach((btn) => {
-        btn.addEventListener("click", async () => {
+        btn.addEventListener("click", async (e) => {
+          e.stopPropagation();
           if (!confirm("Delete this answer?")) return;
           const token = localStorage.getItem("token");
           try {
@@ -247,8 +250,37 @@ async function openDoubtModal(doubtId) {
       });
     }
 
+    // ---- Answer Form ----
+    const answerForm = document.getElementById("answerForm");
+    const answerDropZone = document.getElementById("answerDropZone");
+    const answerImage = document.getElementById("answerImage");
+    const answerFilePreview = document.getElementById("answerFilePreview");
+
+    // Drop-zone for answer
+    if (answerDropZone) {
+      answerDropZone.addEventListener("click", () => answerImage.click());
+      answerDropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        answerDropZone.classList.add("dragging");
+      });
+      answerDropZone.addEventListener("dragleave", () => {
+        answerDropZone.classList.remove("dragging");
+      });
+      answerDropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        answerDropZone.classList.remove("dragging");
+        if (e.dataTransfer.files.length) {
+          answerImage.files = e.dataTransfer.files;
+          showFilePreview(answerImage.files[0], answerFilePreview);
+        }
+      });
+      answerImage.addEventListener("change", () => {
+        if (answerImage.files[0]) showFilePreview(answerImage.files[0], answerFilePreview);
+      });
+    }
+
     // Submit answer
-    document.getElementById("answerForm").addEventListener("submit", async (e) => {
+    answerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const token = localStorage.getItem("token");
       if (!token) {
@@ -258,7 +290,7 @@ async function openDoubtModal(doubtId) {
 
       const formData = new FormData();
       formData.append("text", document.getElementById("answerText").value);
-      const file = document.getElementById("answerImage").files[0];
+      const file = answerImage.files[0];
       if (file) formData.append("image", file);
 
       try {
@@ -300,7 +332,17 @@ async function openDoubtModal(doubtId) {
   }
 }
 
-// Close modal
+// ================== Shared File Preview ==================
+function showFilePreview(file, targetEl) {
+  const sizeKB = (file.size / 1024).toFixed(1);
+  targetEl.innerHTML = `
+    <p style="animation: fadeIn 0.3s;">
+      <i class="fa-solid fa-file"></i> ${file.name} <small>(${sizeKB} KB)</small>
+    </p>
+  `;
+}
+
+// ================== Close Modal ==================
 document.querySelector("#doubtDetailModal .close").addEventListener("click", () => {
   document.getElementById("doubtDetailModal").classList.add("hidden");
 });
