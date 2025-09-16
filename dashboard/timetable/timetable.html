@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>FrostHub - Timetable</title>
-  <link rel="stylesheet" href="../dashboard.css" />
-  <link rel="stylesheet" href="timetable.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="timetable.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="layout">
@@ -16,9 +16,7 @@
         <li><a href="../doubts/doubts.html"><i class="fa-solid fa-question-circle"></i> <span>Doubts</span></a></li>
         <li><a href="timetable.html" class="active"><i class="fa-solid fa-calendar-days"></i> <span>Timetable</span></a></li>
         <li><a href="../notes/notes.html"><i class="fa-solid fa-book"></i> <span>Notes</span></a></li>
-        <li class="logout">
-          <a href="#" id="logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a>
-        </li>
+        <li><a href="#" id="logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a></li>
       </ul>
     </nav>
 
@@ -31,23 +29,100 @@
         <h1><i class="fa-solid fa-calendar-days"></i> Timetable</h1>
       </header>
 
-      <main class="container page-cards">
-        <!-- Timetable -->
+      <main class="container timetable-container">
         <section class="card timetable-card">
-          <h2><i class="fa-solid fa-calendar-week"></i> Weekly Timetable</h2>
-          <div id="timetableContainer" class="timetable-container">
-            <!-- Table will be rendered here dynamically -->
-            <p>Loading timetable...</p>
+          <h2><i class="fa-solid fa-table"></i> Weekly Timetable</h2>
+          <div class="timetable-wrapper">
+            <table class="timetable">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Monday</th>
+                  <th>Tuesday</th>
+                  <th>Wednesday</th>
+                  <th>Thursday</th>
+                  <th>Friday</th>
+                  <th>Saturday</th>
+                  <th>Sunday</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>08:00 - 09:00</td>
+                  <td></td>
+                  <td>Computer Networks (NS-2 Lab)</td>
+                  <td></td>
+                  <td>Cybersecurity (LT101/F301)</td>
+                  <td></td>
+                  <td rowspan="7" colspan="2" class="no-class">No Classes</td>
+                </tr>
+                <tr>
+                  <td>09:40 - 11:20</td>
+                  <td></td>
+                  <td></td>
+                  <td>Quantum Materials (MS LAB-1)</td>
+                  <td>Data Science (LP109)</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>13:00 - 13:50</td>
+                  <td>Cybersecurity (LT101/F301)</td>
+                  <td>Software Engineering (LT103)</td>
+                  <td>Computer Networks (LP101)</td>
+                  <td>Quantum Materials (LT103)</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>13:50 - 14:40</td>
+                  <td>Data Science Lab (AI-Lab)</td>
+                  <td>Machine Learning (LT103)</td>
+                  <td>Software Engg Lab (CSED)</td>
+                  <td>Computer Networks (LT103)</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>14:40 - 15:30</td>
+                  <td></td>
+                  <td>CAO (LT103)</td>
+                  <td></td>
+                  <td>CAO (LT103)</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>15:30 - 16:20</td>
+                  <td></td>
+                  <td></td>
+                  <td>CAO (LT103)</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>16:20 - 17:10</td>
+                  <td></td>
+                  <td>Machine Learning (LT103)</td>
+                  <td>Machine Learning (LT103)</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>17:10 - 18:00</td>
+                  <td></td>
+                  <td></td>
+                  <td>FAV (LT103)</td>
+                  <td></td>
+                  <td></td>
+                  <td colspan="2"></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
       </main>
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="../../shared/utils.js"></script>
   <script src="../../shared/sidebar.js"></script>
-  <script src="timetable.js"></script>
   <script src="../../shared/pageTransition.js"></script>
 </body>
 </html>
