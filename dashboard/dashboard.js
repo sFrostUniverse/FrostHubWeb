@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const username = localStorage.getItem("username") || "Guest";
   const welcomeEl = document.getElementById("welcomeMsg");
   if (welcomeEl) {
-    welcomeEl.innerText = `Welcome ${username}`;
+    welcomeEl.innerHTML = `<i class="fa-solid fa-hand-sparkles"></i> Welcome ${username}`;
   }
 
   // Call widget loaders

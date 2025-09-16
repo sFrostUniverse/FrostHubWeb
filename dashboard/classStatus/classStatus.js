@@ -72,5 +72,4 @@ async function loadClassStatus() {
 // Run on load + auto refresh every minute
 document.addEventListener("DOMContentLoaded", () => {
   loadClassStatus();
-  setInterval(loadClassStatus, 60000);
 });

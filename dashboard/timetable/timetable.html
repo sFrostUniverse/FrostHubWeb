@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>FrostHub - Timetable</title>
-  <link rel="stylesheet" href="../dashboard.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../dashboard.css" />
+  <link rel="stylesheet" href="timetable.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
   <div class="layout">
@@ -29,31 +30,13 @@
       </header>
 
       <main class="container page-cards">
-        <!-- Add Timetable Entry -->
-        <section class="card timetable">
-          <h2><i class="fa-solid fa-plus"></i> Add Timetable Entry</h2>
-          <form id="addTimetableForm">
-            <select id="day" name="day" required>
-              <option value="">📅 Select Day</option>
-              <option value="monday">Monday</option>
-              <option value="tuesday">Tuesday</option>
-              <option value="wednesday">Wednesday</option>
-              <option value="thursday">Thursday</option>
-              <option value="friday">Friday</option>
-              <option value="saturday">Saturday</option>
-              <option value="sunday">Sunday</option>
-            </select>
-            <input type="text" id="subject" name="subject" placeholder="📘 Subject" required />
-            <input type="text" id="teacher" name="teacher" placeholder="👨‍🏫 Teacher" required />
-            <input type="text" id="time" name="time" placeholder="⏰ Time (e.g. 10:00 AM)" required />
-            <button type="submit"><i class="fa-solid fa-plus"></i> Add</button>
-          </form>
-        </section>
-
-        <!-- Weekly Timetable -->
-        <section class="card timetable">
+        <!-- Timetable -->
+        <section class="card timetable-card">
           <h2><i class="fa-solid fa-calendar-week"></i> Weekly Timetable</h2>
-          <div id="timetableContainer">Loading timetable...</div>
+          <div id="timetableContainer" class="timetable-container">
+            <!-- Table will be rendered here dynamically -->
+            <p>Loading timetable...</p>
+          </div>
         </section>
       </main>
     </div>

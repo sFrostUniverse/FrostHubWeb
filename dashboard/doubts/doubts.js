@@ -54,13 +54,19 @@ window.addEventListener("DOMContentLoaded", () => {
   // FAB toggle
   if (fab && addOverlay) {
     const overlayClose = addOverlay.querySelector(".close");
+    
     fab.addEventListener("click", (e) => {
       e.stopPropagation();
       addOverlay.classList.toggle("show");
     });
+
     overlayClose.addEventListener("click", () => {
       addOverlay.classList.remove("show");
     });
+
+    // prevent accidental close when clicking inside overlay
+    addOverlay.addEventListener("click", (e) => e.stopPropagation());
+
     document.addEventListener("click", (e) => {
       if (
         addOverlay.classList.contains("show") &&
@@ -85,8 +91,10 @@ window.addEventListener("DOMContentLoaded", () => {
     dropZone.addEventListener("drop", (e) => {
       e.preventDefault();
       dropZone.classList.remove("dragging");
-      fileInput.files = e.dataTransfer.files;
-      showFilePreview(fileInput.files[0]);
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        showFilePreview(fileInput.files[0]);
+      }
     });
     fileInput.addEventListener("change", () => {
       if (fileInput.files[0]) showFilePreview(fileInput.files[0]);
@@ -94,7 +102,12 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function showFilePreview(file) {
-    filePreview.innerHTML = `<p><i class="fa-solid fa-file"></i> ${file.name}</p>`;
+    const sizeKB = (file.size / 1024).toFixed(1);
+    filePreview.innerHTML = `
+      <p style="animation: fadeIn 0.3s;">
+        <i class="fa-solid fa-file"></i> ${file.name} <small>(${sizeKB} KB)</small>
+      </p>
+    `;
   }
 });
 
@@ -111,12 +124,20 @@ async function loadDoubts(groupId) {
     doubtsList.innerHTML = doubts
       .map(
         (d) => `
-      <div class="doubt-item" data-id="${d._id}">
-        <h3>${d.title}</h3>
-        <p>${d.description.length > 100 ? d.description.slice(0, 100) + "..." : d.description}</p>
-        <small>By ${d.userId?.username || "Unknown"} • ${new Date(d.createdAt).toLocaleString()}</small>
-      </div>
-    `
+        <div class="doubt-item" data-id="${d._id}">
+          <div class="doubt-header">
+            <h3>${d.title}</h3>
+            <span class="status-badge ${
+              d.answered ? "status-answered" : "status-pending"
+            }">${d.answered ? "Answered" : "Not Answered"}</span>
+          </div>
+          <p>${d.description.length > 100 ? d.description.slice(0, 100) + "..." : d.description}</p>
+          <small>
+            By ${d.userId?.username || "Unknown"} • 
+            ${new Date(d.createdAt).toLocaleString()}
+          </small>
+        </div>
+      `
       )
       .join("");
 
@@ -149,10 +170,18 @@ function showDoubtDetails(doubt) {
     <small>By ${doubt.userId?.username || "Unknown"} on ${new Date(
     doubt.createdAt
   ).toLocaleString()}</small>
-    <p>Status: ${doubt.answered ? "✅ Answered" : "❓ Not Answered"}</p>
+    <p>Status: ${doubt.answered 
+      ? '<span class="status-badge status-answered">Answered</span>' 
+      : '<span class="status-badge status-pending">Not Answered</span>'}
+    </p>
   `;
 
   modal.classList.add("show");
+
+  // Escape key to close
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") modal.classList.remove("show");
+  });
 }
 
 // Close doubt detail modal

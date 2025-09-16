@@ -3,10 +3,13 @@ const API_BASE = "https://frostcore.onrender.com/api";
 
 async function apiFetch(url, options = {}) {
   const token = localStorage.getItem("token");
-  const headers = {
-    "Content-Type": "application/json",
-    ...(options.headers || {}),
-  };
+  const headers = { ...(options.headers || {}) };
+
+  // Only add JSON header if body is not FormData
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
   console.log("➡️ API Request:", API_BASE + url, headers);
@@ -18,6 +21,7 @@ async function apiFetch(url, options = {}) {
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
 }
+
 
 // Make it available everywhere
 window.apiFetch = apiFetch;

@@ -1,7 +1,6 @@
 window.addEventListener("DOMContentLoaded", () => {
   const groupId = localStorage.getItem("groupId");
   const timetableContainer = document.getElementById("timetableContainer");
-  const addForm = document.getElementById("addTimetableForm");
 
   const days = [
     "monday",
@@ -18,78 +17,58 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // ✅ Load timetable for all days
+  // ✅ Load timetable as a table
   loadWeeklyTimetable(groupId);
 
-  // ✅ Handle add timetable form
-  addForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (!token) return alert("Not logged in!");
-
-    const entry = {
-      day: document.getElementById("day").value,
-      subject: document.getElementById("subject").value,
-      teacher: document.getElementById("teacher").value,
-      time: document.getElementById("time").value,
-    };
-
-    try {
-      const res = await fetch(
-        `${API_BASE}/timetable/groups/${groupId}/timetable`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(entry),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to add timetable entry");
-      await res.json();
-
-      addForm.reset();
-      loadWeeklyTimetable(groupId); // refresh list
-    } catch (err) {
-      console.error("Error adding timetable entry:", err);
-      alert("Failed to add entry.");
-    }
-  });
-
-  // 🔹 Fetch and render timetable for all days
   async function loadWeeklyTimetable(groupId) {
-    timetableContainer.innerHTML = "";
+    try {
+      // Fetch ALL timetable entries
+      const allEntries = await apiFetch(`/groups/${groupId}/timetable`);
 
-    for (const day of days) {
-      try {
-        const entries = await apiFetch(`/groups/${groupId}/timetable?day=${day}`);
-
-        const daySection = document.createElement("div");
-        daySection.classList.add("day-section");
-
-        if (!entries || entries.length === 0) {
-          daySection.innerHTML = `<h3>${capitalize(day)}</h3><p>No classes.</p>`;
-        } else {
-          const list = entries
-            .map(
-              (e) => `
-            <div class="timetable-entry">
-              <strong>${e.time}</strong> - ${e.subject} 
-              <em>(${e.teacher})</em>
-            </div>
-          `
-            )
-            .join("");
-
-          daySection.innerHTML = `<h3>${capitalize(day)}</h3>${list}`;
-        }
-
-        timetableContainer.appendChild(daySection);
-      } catch (err) {
-        console.error(`Error loading ${day} timetable:`, err);
+      if (!allEntries || allEntries.length === 0) {
+        timetableContainer.innerHTML = "<p>No timetable found.</p>";
+        return;
       }
+
+      // Group by day
+      const byDay = {};
+      days.forEach((d) => (byDay[d] = []));
+      allEntries.forEach((e) => {
+        if (byDay[e.day]) byDay[e.day].push(e);
+      });
+
+      // Collect unique time slots
+      const allTimes = [
+        ...new Set(allEntries.map((e) => e.time).sort()),
+      ];
+
+      // Build table
+      let html = `
+        <table class="timetable">
+          <thead>
+            <tr>
+              <th>Time</th>
+              ${days.map((d) => `<th>${capitalize(d)}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      allTimes.forEach((time) => {
+        html += `<tr><td class="time-slot">${time}</td>`;
+        days.forEach((day) => {
+          const entry = byDay[day].find((e) => e.time === time);
+          html += `<td>${entry ? `<strong>${entry.subject}</strong><br><em>${entry.teacher}</em>` : "-"}</td>`;
+        });
+        html += `</tr>`;
+      });
+
+      html += `</tbody></table>`;
+
+      timetableContainer.innerHTML = html;
+    } catch (err) {
+      console.error("Error loading timetable:", err);
+      timetableContainer.innerHTML = "<p>Failed to load timetable.</p>";
     }
   }
 

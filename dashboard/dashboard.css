@@ -234,27 +234,62 @@ body {
   border-radius: var(--radius);
 }
 
-/* badge styles */
+/* Status badges (used in Class Status + Today’s Classes) */
 .status-badge {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
   padding: 0.3rem 0.6rem;
-  border-radius: 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-
 .status-ongoing {
-  background: rgba(16,185,129,0.15); /* green */
+  background: rgba(16, 185, 129, 0.2);
   color: #34d399;
 }
-
 .status-upcoming {
-  background: rgba(59,130,246,0.15); /* blue */
+  background: rgba(59, 130, 246, 0.2);
   color: #60a5fa;
 }
-
+.status-past {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
 .status-none {
-  background: rgba(255,255,255,0.05);
+  background: rgba(156, 163, 175, 0.2);
   color: #9ca3af;
+}
+/* Today’s classes refined list */
+#classesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.class-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.25s ease;
+}
+.class-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.class-info {
+  display: flex;
+  flex-direction: column;
+}
+.class-info strong {
+  font-size: 1rem;
+  color: var(--text-light);
+}
+.class-info small {
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 
@@ -373,4 +408,25 @@ form button {
 #page-container.fade-in {
   opacity: 1;
   transition: opacity 0.25s ease;
+}
+/* Sidebar logout at bottom */
+.sidebar ul {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sidebar ul .logout {
+  margin-top: auto;
+}
+.sidebar ul .logout a {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-radius: var(--radius);
+  margin: 0.3rem;
+  padding: 0.6rem 1rem;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.sidebar ul .logout a:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
 }

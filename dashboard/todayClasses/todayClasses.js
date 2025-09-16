@@ -41,12 +41,16 @@ async function loadTodayClasses() {
       }
 
       const li = document.createElement("li");
-      li.classList.add("class-row"); // styling hook
+      li.classList.add("class-item"); // matches CSS
 
       li.innerHTML = `
-        <span>${cls.subject} (${cls.teacher}) @ ${cls.time.split("-")[0]}</span>
+        <div class="class-info">
+          <strong>${cls.subject}</strong>
+          <small>${cls.teacher} • ${cls.time}</small>
+        </div>
         <span class="status-badge ${badgeClass}">${status}</span>
       `;
+
       ul.appendChild(li);
     });
 
@@ -58,4 +62,3 @@ async function loadTodayClasses() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadTodayClasses);

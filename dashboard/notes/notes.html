@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>FrostHub - Notes</title>
   <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="notes.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -29,26 +30,11 @@
       </header>
 
       <main class="container page-cards">
-        <!-- Add Note Form -->
-        <section class="card notes">
-          <h2><i class="fa-solid fa-plus"></i> Add Note</h2>
-          <form id="addNoteForm">
-            <input type="text" id="noteTitle" name="title" placeholder="Enter title" required />
-            <select id="noteType" name="type" required>
-              <option value="">Select type</option>
-              <option value="folder">📂 Folder</option>
-              <option value="pdf">📄 PDF</option>
-              <option value="ppt">📊 PPT</option>
-            </select>
-            <input type="url" id="noteUrl" name="url" placeholder="Enter file URL (only for pdf/ppt)" />
-            <button type="submit"><i class="fa-solid fa-plus"></i> Add Note</button>
-          </form>
-        </section>
+        <!-- Breadcrumbs -->
+        <div id="breadcrumbs" class="breadcrumbs">Root</div>
 
         <!-- Notes List -->
-        <section class="card notes">
-          <h2><i class="fa-solid fa-layer-group"></i> Group Notes</h2>
-          <div id="breadcrumbs" class="breadcrumbs"><i class="fa-solid fa-folder"></i> Root</div>
+        <section class="notes-section">
           <div id="notesList">Loading notes...</div>
         </section>
       </main>
