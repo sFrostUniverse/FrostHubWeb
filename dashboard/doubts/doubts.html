@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>FrostHub - Doubts</title>
   <link rel="stylesheet" href="../dashboard.css">
-  <!-- Font Awesome -->
+  <link rel="stylesheet" href="doubts.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -29,24 +29,43 @@
         <h1><i class="fa-solid fa-question-circle"></i> Doubts</h1>
       </header>
 
-      <!-- Cards -->
       <main class="container page-cards">
-        <!-- Add Doubt -->
-        <section class="card doubt">
-          <h2><i class="fa-solid fa-plus"></i> Add Doubt</h2>
-          <form id="addDoubtForm">
-            <input type="text" id="doubtTitle" name="title" placeholder="Enter doubt title" required />
-            <textarea id="doubtDesc" name="desc" placeholder="Enter description..." rows="3" required></textarea>
-            <button type="submit"><i class="fa-solid fa-plus"></i> Submit</button>
-          </form>
-        </section>
-
         <!-- My Doubts -->
         <section class="card doubt">
           <h2><i class="fa-solid fa-list"></i> My Doubts</h2>
           <div id="doubtsList">Loading doubts...</div>
         </section>
       </main>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <button id="fabAddDoubt" class="fab"><i class="fa-solid fa-question"></i></button>
+
+  <!-- Add Doubt Overlay -->
+  <div id="addDoubtOverlay" class="add-doubt-overlay">
+    <span class="close">&times;</span>
+    <h2><i class="fa-solid fa-pen"></i> Add Doubt</h2>
+    <form id="addDoubtForm">
+      <input type="text" id="doubtTitle" name="title" placeholder="Enter doubt title" required />
+      <textarea id="doubtDescription" name="description" placeholder="Enter description..." rows="3" required></textarea>
+
+      <div class="file-input-wrapper">
+        <label class="file-input-label" for="doubtImage">
+          <i class="fa-solid fa-paperclip"></i> Attach file
+        </label>
+        <input type="file" id="doubtImage" name="image" accept="image/*" />
+      </div>
+
+      <button type="submit"><i class="fa-solid fa-plus"></i> Submit</button>
+    </form>
+  </div>
+
+  <!-- Doubt Details Modal -->
+  <div id="doubtDetailModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div id="doubtDetailContent"></div>
     </div>
   </div>
 
