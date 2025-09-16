@@ -1,3 +1,4 @@
+// ================== DOUBTS PAGE ==================
 window.addEventListener("DOMContentLoaded", () => {
   const groupId = localStorage.getItem("groupId");
   const doubtsList = document.getElementById("doubtsList");
@@ -16,7 +17,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Load doubts on page load
   loadDoubts(groupId);
 
-  // Add Doubt form submit
+  // ---- Add Doubt form submit ----
   askForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -25,7 +26,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData();
     formData.append("title", document.getElementById("doubtTitle").value);
     formData.append("description", document.getElementById("doubtDescription").value);
-
     const file = fileInput.files[0];
     if (file) formData.append("image", file);
 
@@ -43,18 +43,17 @@ window.addEventListener("DOMContentLoaded", () => {
       filePreview.innerHTML = "";
       loadDoubts(groupId);
 
-      // Close overlay
-      addOverlay.classList.remove("show");
+      addOverlay.classList.remove("show"); // close overlay
     } catch (err) {
       console.error("Error asking doubt:", err);
       alert("Failed to submit doubt.");
     }
   });
 
-  // FAB toggle
+  // ---- FAB toggle ----
   if (fab && addOverlay) {
     const overlayClose = addOverlay.querySelector(".close");
-    
+
     fab.addEventListener("click", (e) => {
       e.stopPropagation();
       addOverlay.classList.toggle("show");
@@ -64,7 +63,6 @@ window.addEventListener("DOMContentLoaded", () => {
       addOverlay.classList.remove("show");
     });
 
-    // prevent accidental close when clicking inside overlay
     addOverlay.addEventListener("click", (e) => e.stopPropagation());
 
     document.addEventListener("click", (e) => {
@@ -78,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Drag & Drop
+  // ---- Drag & Drop ----
   if (dropZone) {
     dropZone.addEventListener("click", () => fileInput.click());
     dropZone.addEventListener("dragover", (e) => {
@@ -111,7 +109,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Load doubts
+// ================== Load Doubts ==================
 async function loadDoubts(groupId) {
   const doubtsList = document.getElementById("doubtsList");
   try {
@@ -144,8 +142,7 @@ async function loadDoubts(groupId) {
     document.querySelectorAll(".doubt-item").forEach((item) => {
       item.addEventListener("click", () => {
         const doubtId = item.getAttribute("data-id");
-        const doubt = doubts.find((x) => x._id === doubtId);
-        showDoubtDetails(doubt);
+        openDoubtModal(doubtId);
       });
     });
   } catch (err) {
@@ -154,39 +151,156 @@ async function loadDoubts(groupId) {
   }
 }
 
-// Doubt details modal
-function showDoubtDetails(doubt) {
+// ================== Doubt Modal ==================
+async function openDoubtModal(doubtId) {
   const modal = document.getElementById("doubtDetailModal");
   const content = document.getElementById("doubtDetailContent");
+  const userId = localStorage.getItem("userId");
 
-  content.innerHTML = `
-    <h2>${doubt.title}</h2>
-    <p>${doubt.description}</p>
-    ${
-      doubt.imageUrl
-        ? `<img src="${doubt.imageUrl}" alt="Doubt image" style="max-width:100%; margin-top:10px;">`
-        : ""
+  modal.classList.remove("hidden");
+  content.innerHTML = "<p>Loading...</p>";
+
+  try {
+    const doubt = await apiFetch(`/doubts/${doubtId}`);
+
+    content.innerHTML = `
+      <h2>${doubt.title}</h2>
+      <p>${doubt.description}</p>
+      ${
+        doubt.imageUrl
+          ? `<img src="${doubt.imageUrl}" alt="Doubt image" style="max-width:100%;margin-top:10px;">`
+          : ""
+      }
+      <small>By ${doubt.userId?.username || "Unknown"} on ${new Date(
+      doubt.createdAt
+    ).toLocaleString()}</small>
+      <p>Status: ${
+        doubt.answered
+          ? '<span class="status-badge status-answered">Answered</span>'
+          : '<span class="status-badge status-pending">Not Answered</span>'
+      }</p>
+
+      <h3>Answers</h3>
+      <div id="answersList">${
+        doubt.answers?.length ? "" : "No answers yet."
+      }</div>
+
+      <form id="answerForm" enctype="multipart/form-data">
+        <textarea id="answerText" placeholder="Your answer..." required></textarea>
+        <input type="file" id="answerImage" accept="image/*" />
+        <button type="submit">Submit Answer</button>
+      </form>
+
+      <button id="deleteDoubtBtn" style="display:none;color:white;background:red;margin-top:10px;">
+        Delete Doubt
+      </button>
+    `;
+
+    // Show delete button if owner
+    if (doubt.userId?._id === userId) {
+      document.getElementById("deleteDoubtBtn").style.display = "inline-block";
     }
-    <small>By ${doubt.userId?.username || "Unknown"} on ${new Date(
-    doubt.createdAt
-  ).toLocaleString()}</small>
-    <p>Status: ${doubt.answered 
-      ? '<span class="status-badge status-answered">Answered</span>' 
-      : '<span class="status-badge status-pending">Not Answered</span>'}
-    </p>
-  `;
 
-  modal.classList.add("show");
+    // Render answers
+    const answersList = document.getElementById("answersList");
+    if (doubt.answers?.length) {
+      answersList.innerHTML = doubt.answers
+        .map(
+          (a) => `
+          <div class="answer-card" data-id="${a._id}">
+            <p>${a.text}</p>
+            ${
+              a.imageUrl
+                ? `<img src="${a.imageUrl}" alt="Answer image" style="max-width:200px;">`
+                : ""
+            }
+            <small>By ${a.createdBy?.username || "Unknown"} on ${new Date(
+            a.createdAt
+          ).toLocaleString()}</small>
+            ${
+              a.createdBy?._id === userId || doubt.userId?._id === userId
+                ? `<button class="delete-answer-btn" data-id="${a._id}" style="color:white;background:red;">Delete Answer</button>`
+                : ""
+            }
+          </div>
+        `
+        )
+        .join("");
 
-  // Escape key to close
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") modal.classList.remove("show");
-  });
+      // Delete answer
+      answersList.querySelectorAll(".delete-answer-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Delete this answer?")) return;
+          const token = localStorage.getItem("token");
+          try {
+            const res = await fetch(`${API_BASE}/doubts/answers/${btn.dataset.id}`, {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error("Failed to delete answer");
+            openDoubtModal(doubtId); // reload modal
+          } catch (err) {
+            console.error("Error deleting answer:", err);
+            alert("Failed to delete answer.");
+          }
+        });
+      });
+    }
+
+    // Submit answer
+    document.getElementById("answerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Not authenticated. Please login again.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("text", document.getElementById("answerText").value);
+      const file = document.getElementById("answerImage").files[0];
+      if (file) formData.append("image", file);
+
+      try {
+        const res = await fetch(`${API_BASE}/doubts/${doubtId}/add-answer`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        if (!res.ok) throw new Error("Failed to submit answer");
+        openDoubtModal(doubtId); // reload modal
+      } catch (err) {
+        console.error("Error submitting answer:", err);
+        alert("Failed to submit answer.");
+      }
+    });
+
+    // Delete doubt
+    document.getElementById("deleteDoubtBtn").addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete this doubt?")) return;
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(`${API_BASE}/doubts/${doubtId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Failed to delete doubt");
+        alert("Doubt deleted!");
+        modal.classList.add("hidden");
+        loadDoubts(localStorage.getItem("groupId")); // refresh list
+      } catch (err) {
+        console.error("Error deleting doubt:", err);
+        alert("Failed to delete doubt.");
+      }
+    });
+
+  } catch (err) {
+    console.error("Error loading doubt:", err);
+    content.innerHTML = "<p>Failed to load doubt details.</p>";
+  }
 }
 
-// Close doubt detail modal
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("close") || e.target.classList.contains("modal")) {
-    e.target.closest(".modal").classList.remove("show");
-  }
+// Close modal
+document.querySelector("#doubtDetailModal .close").addEventListener("click", () => {
+  document.getElementById("doubtDetailModal").classList.add("hidden");
 });

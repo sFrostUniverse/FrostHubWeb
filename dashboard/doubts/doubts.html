@@ -66,7 +66,29 @@
   <div id="doubtDetailModal" class="modal hidden">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <div id="doubtDetailContent"></div>
+      <div id="doubtDetailContent">
+        <!-- Filled dynamically by doubts.js -->
+        <h2 id="modalTitle">Loading...</h2>
+        <p id="modalDescription"></p>
+        <div id="modalMeta"></div>
+        <div id="modalStatus"></div>
+
+        <!-- Answers section -->
+        <h3>Answers</h3>
+        <div id="answersList">No answers yet.</div>
+
+        <!-- Answer form -->
+        <form id="answerForm" enctype="multipart/form-data">
+          <textarea id="answerText" placeholder="Your answer..." required></textarea>
+          <input type="file" id="answerImage" accept="image/*" />
+          <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
+        </form>
+
+        <!-- Delete doubt button -->
+        <button id="deleteDoubtBtn" style="display:none;color:white;background:red;margin-top:10px;">
+          Delete Doubt
+        </button>
+      </div>
     </div>
   </div>
 

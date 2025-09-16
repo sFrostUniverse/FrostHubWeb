@@ -17,9 +17,10 @@ window.addEventListener("DOMContentLoaded", () => {
   // 🔹 Fetch and render notes
   async function loadNotes(groupId, parentId = null) {
     try {
-      // Fade out old content
-      notesList.classList.add("fade-out");
-      notesList.classList.add("loading");
+
+      notesList.classList.remove("fade-in"); // reset old state
+      notesList.classList.add("fade-out", "loading");
+
 
       let url = `/notes/${groupId}`;
       if (parentId) url += `?parentId=${parentId}`;
