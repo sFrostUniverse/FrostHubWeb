@@ -1,43 +1,29 @@
+/* Fullscreen dark background */
 body {
   margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #0f172a;
   font-family: Arial, sans-serif;
-  background: #1e1e2f;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.container {
-  background: #2f2f48;
-  padding: 2rem;
-  border-radius: 10px;
-  text-align: center;
-  width: 320px;
-}
-
-input, button {
+/* Canvas fills screen */
+#splashCanvas {
   width: 100%;
-  padding: 0.8rem;
-  margin: 0.5rem 0;
-  border: none;
-  border-radius: 6px;
-  outline: none;
+  height: 100%;
+  display: block;
 }
 
-button {
-  background: #4a90e2;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #357ab7;
-}
-
-.divider {
-  margin: 1rem 0;
-  font-size: 0.9rem;
-  color: #ccc;
+/* License footer */
+.license-footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
 }
