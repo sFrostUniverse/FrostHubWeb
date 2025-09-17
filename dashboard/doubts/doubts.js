@@ -131,11 +131,17 @@ async function loadDoubts(groupId) {
       .join("");
 
       document.querySelectorAll(".doubt-item").forEach((item) => {
-        item.addEventListener("click", () => {
-          const doubtId = item.dataset.id;
-          toggleDoubtDetails(doubtId, item);
-        });
-      });
+  item.addEventListener("click", (e) => {
+    // ✅ Ignore clicks inside expanded details (forms, inputs, buttons)
+    if (e.target.closest(".doubt-details")) return;
+
+    // ✅ Always allow clicking anywhere on the item to toggle
+    const doubtId = item.dataset.id;
+    toggleDoubtDetails(doubtId, item);
+  });
+});
+
+
 
   } catch (err) {
     console.error("Error loading doubts:", err);
@@ -204,6 +210,11 @@ async function toggleDoubtDetails(doubtId, itemEl) {
     `;
 
     // Render answers
+    // ✅ Prevent clicks inside answer form from collapsing
+    detailsEl.querySelectorAll("form, textarea, input, button").forEach((el) => {
+      el.addEventListener("click", (ev) => ev.stopPropagation());
+    });
+
     const answersList = detailsEl.querySelector(".answers-list");
     if (doubt.answers?.length) {
       answersList.innerHTML = doubt.answers.map(a => `

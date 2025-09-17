@@ -254,19 +254,45 @@
   box-shadow: 0 0 0 2px var(--accent1);
 }
 
-.answer-form button {
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+/* Inline Doubt Details Back Button */
+.go-back-btn {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  background: none;
   border: none;
-  color: white;
+  color: var(--text-light);
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.answer-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+.go-back-btn:hover {
+  opacity: 1;
+  transform: translateX(-2px);
+}
+
+/* Adjust details container so back button has room */
+.doubt-details {
+  position: relative;   /* ✅ anchor for absolute back button */
+  margin-top: 0.8rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--radius);
+  padding: 2rem 1rem 1rem;  /* ✅ extra space on top */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease;
+}
+
+.doubt-details.show {
+  padding: 2rem 1rem 1rem; /* keep same padding when expanded */
+  max-height: 1000px;
+  opacity: 1;
 }
 
 /* Inline Delete Doubt Button */
