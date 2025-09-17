@@ -5,104 +5,80 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const particles = [];
-const logoImg = new Image();
-logoImg.src = "assets/logo.png";
-
-const particleCount = 1200; // dense logo
-let logoParticles = [];
-
-// Resize handling
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+const colors = ["#60a5fa", "#93c5fd", "#e0f2fe", "#ffffff"]; // frost blues + white
+const numParticles = 400; // moderate density
 
 // Particle class
 class Particle {
-  constructor(x, y, tx, ty, color) {
-    this.x = x;
-    this.y = y;
-    this.tx = tx; // target x
-    this.ty = ty; // target y
-    this.color = color;
-    this.size = 2 + Math.random() * 1.5;
-    this.speed = 0.05 + Math.random() * 0.03; // easing
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 1;
+    this.speedX = (Math.random() - 0.5) * 2;
+    this.speedY = (Math.random() - 0.5) * 2;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.life = 0;
   }
 
   update() {
-    this.x += (this.tx - this.x) * this.speed;
-    this.y += (this.ty - this.y) * this.speed;
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.life++;
+
+    // slowly drift towards center (frost storm collapsing)
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    this.x += (centerX - this.x) * 0.002;
+    this.y += (centerY - this.y) * 0.002;
+
+    // reset if offscreen
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+      this.reset();
+    }
   }
 
   draw() {
+    ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
     ctx.fill();
   }
 }
 
-// Extract pixels from logo
-function createParticlesFromLogo() {
-  const tempCanvas = document.createElement("canvas");
-  const tempCtx = tempCanvas.getContext("2d");
-  const scale = 0.4; // logo scaling
-
-  const logoWidth = logoImg.width * scale;
-  const logoHeight = logoImg.height * scale;
-  tempCanvas.width = logoWidth;
-  tempCanvas.height = logoHeight;
-
-  tempCtx.drawImage(logoImg, 0, 0, logoWidth, logoHeight);
-  const imageData = tempCtx.getImageData(0, 0, logoWidth, logoHeight).data;
-
-  const offsetX = canvas.width / 2 - logoWidth / 2;
-  const offsetY = canvas.height / 2 - logoHeight / 2;
-
-  for (let y = 0; y < logoHeight; y += 3) {
-    for (let x = 0; x < logoWidth; x += 3) {
-      const index = (y * logoWidth + x) * 4;
-      const r = imageData[index];
-      const g = imageData[index + 1];
-      const b = imageData[index + 2];
-      const a = imageData[index + 3];
-      if (a > 150) {
-        const color = `rgb(${r},${g},${b})`;
-        const startX = Math.random() * canvas.width;
-        const startY = Math.random() * canvas.height;
-        logoParticles.push(new Particle(startX, startY, offsetX + x, offsetY + y, color));
-      }
-    }
-  }
+// Create particles
+for (let i = 0; i < numParticles; i++) {
+  particles.push(new Particle());
 }
 
-// Animate
-function animate() {
-  ctx.fillStyle = "rgba(15, 23, 42, 0.25)"; // trailing effect
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+let animationFrame;
+let animationTime = 0;
+const revealTime = 3500; // ~3.5s storm before reveal
+const redirectDelay = 1500; // wait after logo shows
 
-  logoParticles.forEach((p) => {
+function animate() {
+  animationFrame = requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
     p.update();
     p.draw();
   });
 
-  requestAnimationFrame(animate);
-}
+  animationTime += 16;
 
-logoImg.onload = () => {
-  createParticlesFromLogo();
-  animate();
+  // After revealTime, show logo
+  if (animationTime > revealTime) {
+    document.querySelector(".logo-container").classList.add("show");
 
-  // Hold logo for a bit, then fade out
-  setTimeout(() => {
-    canvas.style.transition = "opacity 1.5s ease";
-    canvas.style.opacity = "0";
+    // stop animating after reveal
+    cancelAnimationFrame(animationFrame);
 
-    document.querySelector(".license-footer").style.transition = "opacity 1s ease";
-    document.querySelector(".license-footer").style.opacity = "0";
-
+    // Redirect after delay
     setTimeout(() => {
-      // Redirect logic
       const token = localStorage.getItem("token");
       const groupId = localStorage.getItem("groupId");
 
@@ -115,6 +91,8 @@ logoImg.onload = () => {
       } else {
         window.location.href = "/FrostHubWeb/login/login.html";
       }
-    }, 1600);
-  }, 4000); // 4s total before redirect
-};
+    }, redirectDelay);
+  }
+}
+
+animate();

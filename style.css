@@ -1,16 +1,19 @@
-/* Fullscreen black canvas */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  background: #0f172a;
+  overflow: hidden;
+  background: #0f172a; /* dark frost night */
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  color: white;
 }
 
+/* Fullscreen canvas for particles */
 #splashCanvas {
   position: absolute;
   top: 0;
@@ -18,15 +21,34 @@ body, html {
   width: 100%;
   height: 100%;
   display: block;
-  background: #0f172a; /* Dark base */
+  z-index: 1;
 }
 
-.license-footer {
+/* Logo container (hidden initially) */
+.logo-container {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.logo-container.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.logo {
+  width: 160px;
+  max-width: 40vw;
+}
+
+/* Footer License */
+.license {
   position: absolute;
-  bottom: 20px;
-  font-size: 0.8rem;
+  bottom: 16px;
+  font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.6);
-  font-family: Arial, sans-serif;
+  z-index: 3;
   text-align: center;
   width: 100%;
 }
