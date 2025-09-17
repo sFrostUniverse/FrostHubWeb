@@ -1,100 +1,120 @@
-// Three.js splash particle animation
 const canvas = document.getElementById("splashCanvas");
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  45,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.z = 300;
+const ctx = canvas.getContext("2d");
 
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x0f172a, 1);
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-// Particle material
-const particleCount = 4000;
-const geometry = new THREE.BufferGeometry();
-const positions = new Float32Array(particleCount * 3);
-const targetPositions = new Float32Array(particleCount * 3);
+const particles = [];
+const logoImg = new Image();
+logoImg.src = "assets/logo.png";
 
-for (let i = 0; i < particleCount; i++) {
-  positions[i * 3] = (Math.random() - 0.5) * 600;
-  positions[i * 3 + 1] = (Math.random() - 0.5) * 600;
-  positions[i * 3 + 2] = (Math.random() - 0.5) * 600;
-}
-geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+const particleCount = 1200; // dense logo
+let logoParticles = [];
 
-const material = new THREE.PointsMaterial({
-  color: 0x38bdf8,
-  size: 2,
-  transparent: true,
-  opacity: 0.9
+// Resize handling
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 });
-const points = new THREE.Points(geometry, material);
-scene.add(points);
 
-// Load FrostHub logo → create particle target shape
-const loader = new THREE.TextureLoader();
-loader.load("assets/logo.png", (texture) => {
-  const img = texture.image;
-  const canvasTemp = document.createElement("canvas");
-  const ctx = canvasTemp.getContext("2d");
-  canvasTemp.width = img.width;
-  canvasTemp.height = img.height;
-  ctx.drawImage(img, 0, 0);
+// Particle class
+class Particle {
+  constructor(x, y, tx, ty, color) {
+    this.x = x;
+    this.y = y;
+    this.tx = tx; // target x
+    this.ty = ty; // target y
+    this.color = color;
+    this.size = 2 + Math.random() * 1.5;
+    this.speed = 0.05 + Math.random() * 0.03; // easing
+  }
 
-  const imgData = ctx.getImageData(0, 0, img.width, img.height).data;
-  let p = 0;
-  for (let y = 0; y < img.height; y += 4) {
-    for (let x = 0; x < img.width; x += 4) {
-      const idx = (y * img.width + x) * 4;
-      if (imgData[idx + 3] > 128 && p < particleCount) {
-        targetPositions[p * 3] = x - img.width / 2;
-        targetPositions[p * 3 + 1] = -y + img.height / 2;
-        targetPositions[p * 3 + 2] = 0;
-        p++;
+  update() {
+    this.x += (this.tx - this.x) * this.speed;
+    this.y += (this.ty - this.y) * this.speed;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+// Extract pixels from logo
+function createParticlesFromLogo() {
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
+  const scale = 0.4; // logo scaling
+
+  const logoWidth = logoImg.width * scale;
+  const logoHeight = logoImg.height * scale;
+  tempCanvas.width = logoWidth;
+  tempCanvas.height = logoHeight;
+
+  tempCtx.drawImage(logoImg, 0, 0, logoWidth, logoHeight);
+  const imageData = tempCtx.getImageData(0, 0, logoWidth, logoHeight).data;
+
+  const offsetX = canvas.width / 2 - logoWidth / 2;
+  const offsetY = canvas.height / 2 - logoHeight / 2;
+
+  for (let y = 0; y < logoHeight; y += 3) {
+    for (let x = 0; x < logoWidth; x += 3) {
+      const index = (y * logoWidth + x) * 4;
+      const r = imageData[index];
+      const g = imageData[index + 1];
+      const b = imageData[index + 2];
+      const a = imageData[index + 3];
+      if (a > 150) {
+        const color = `rgb(${r},${g},${b})`;
+        const startX = Math.random() * canvas.width;
+        const startY = Math.random() * canvas.height;
+        logoParticles.push(new Particle(startX, startY, offsetX + x, offsetY + y, color));
       }
     }
   }
-});
-
-// Animate particles into logo
-function animate() {
-  requestAnimationFrame(animate);
-  const pos = geometry.attributes.position.array;
-
-  for (let i = 0; i < particleCount; i++) {
-    pos[i * 3] += (targetPositions[i * 3] - pos[i * 3]) * 0.05;
-    pos[i * 3 + 1] += (targetPositions[i * 3 + 1] - pos[i * 3 + 1]) * 0.05;
-    pos[i * 3 + 2] += (targetPositions[i * 3 + 2] - pos[i * 3 + 2]) * 0.05;
-  }
-
-  geometry.attributes.position.needsUpdate = true;
-  renderer.render(scene, camera);
 }
-animate();
 
-// Redirect after ~4 seconds
-setTimeout(() => {
-  const token = localStorage.getItem("token");
-  const groupId = localStorage.getItem("groupId");
+// Animate
+function animate() {
+  ctx.fillStyle = "rgba(15, 23, 42, 0.25)"; // trailing effect
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (token) {
-    if (!groupId) {
-      window.location.href = "/FrostHubWeb/login/group.html";
-    } else {
-      window.location.href = "/FrostHubWeb/dashboard/dashboard.html";
-    }
-  } else {
-    window.location.href = "/FrostHubWeb/login/login.html";
-  }
-}, 4000);
+  logoParticles.forEach((p) => {
+    p.update();
+    p.draw();
+  });
 
-// Resize handler
-window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+  requestAnimationFrame(animate);
+}
+
+logoImg.onload = () => {
+  createParticlesFromLogo();
+  animate();
+
+  // Hold logo for a bit, then fade out
+  setTimeout(() => {
+    canvas.style.transition = "opacity 1.5s ease";
+    canvas.style.opacity = "0";
+
+    document.querySelector(".license-footer").style.transition = "opacity 1s ease";
+    document.querySelector(".license-footer").style.opacity = "0";
+
+    setTimeout(() => {
+      // Redirect logic
+      const token = localStorage.getItem("token");
+      const groupId = localStorage.getItem("groupId");
+
+      if (token) {
+        if (!groupId) {
+          window.location.href = "/FrostHubWeb/login/group.html";
+        } else {
+          window.location.href = "/FrostHubWeb/dashboard/dashboard.html";
+        }
+      } else {
+        window.location.href = "/FrostHubWeb/login/login.html";
+      }
+    }, 1600);
+  }, 4000); // 4s total before redirect
+};
