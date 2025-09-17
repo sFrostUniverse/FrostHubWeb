@@ -189,82 +189,72 @@
   font-size: 0.8rem;
   opacity: 0.6;
 }
-
-/* Doubt Detail Modal */
-#doubtDetailModal .modal-content {
-  max-width: 600px;
-}
-#doubtDetailContent img {
-  margin-top: 1rem;
+/* ============================
+   Inline Doubt Details (with Slide + Fade)
+============================ */
+.doubt-details {
+  margin-top: 0.8rem;
+  background: rgba(255,255,255,0.03);
   border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-}
-#doubtDetailContent h2 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
-}
-#doubtDetailContent p {
-  margin-bottom: 0.5rem;
-}
-#doubtDetailContent small {
-  display: block;
-  margin-top: 0.5rem;
-  opacity: 0.7;
+  padding: 0 1rem;                /* collapsed padding */
+  max-height: 0;                  /* collapsed */
+  overflow: hidden;
+  opacity: 0;                     /* start invisible */
+  transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease;
 }
 
-/* Answers list */
-#answersList {
+/* Expanded state */
+.doubt-details.show {
+  padding: 1rem;
+  max-height: 1000px;             /* big enough */
+  opacity: 1;                     /* fade in */
+}
+
+.doubt-details h3 {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.doubt-details img {
+  margin-top: 0.5rem;
+  border-radius: var(--radius);
+  max-width: 100%;
+  display: block;
+}
+
+.answers-list {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Inline Answer Form */
+.answer-form {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-.answer-card {
-  background: rgba(255,255,255,0.05);
-  padding: 0.8rem 1rem;
-  border-radius: var(--radius);
-  transition: background 0.2s ease;
-}
-.answer-card:hover {
-  background: rgba(255,255,255,0.08);
-}
-.answer-card small {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-.delete-answer-btn {
-  margin-top: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  transition: background 0.2s ease;
-}
-.delete-answer-btn:hover {
-  background: rgba(239, 68, 68, 0.35);
+  gap: 0.6rem;
 }
 
-/* Answer form */
-#answerForm {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-#answerForm textarea {
-  padding: 0.8rem;
+.answer-form textarea {
+  padding: 0.6rem 1rem;
   border-radius: var(--radius);
   border: none;
+  outline: none;
   background: rgba(255,255,255,0.05);
   color: var(--text-light);
+  font-size: 0.95rem;
   resize: vertical;
 }
-#answerForm button {
+.answer-form textarea:focus {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 2px var(--accent1);
+}
+
+.answer-form button {
   background: linear-gradient(135deg, var(--accent1), var(--accent2));
   border: none;
   color: white;
@@ -274,15 +264,15 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-#answerForm button:hover {
+.answer-form button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
-/* Delete doubt button */
-#deleteDoubtBtn {
-  margin-top: 1rem;
-  padding: 0.6rem 1rem;
+/* Inline Delete Doubt Button */
+.delete-doubt-btn {
+  margin-top: 0.8rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: var(--radius);
   cursor: pointer;
@@ -291,103 +281,8 @@
   color: #f87171;
   transition: background 0.2s ease;
 }
-#deleteDoubtBtn:hover {
+.delete-doubt-btn:hover {
   background: rgba(239, 68, 68, 0.35);
 }
-/* Answer card collapsed/expanded */
-.answer-card {
-  background: rgba(255,255,255,0.05);
-  border-radius: var(--radius);
-  padding: 0.8rem 1rem;
-  cursor: pointer;
-  overflow: hidden;
-  max-height: 80px; /* collapsed size */
-  transition: max-height 0.4s ease, background 0.2s ease;
-}
-.answer-card:hover {
-  background: rgba(255,255,255,0.08);
-}
-.answer-card.expanded {
-  max-height: 500px; /* expanded size */
-}
-.answer-card p {
-  margin: 0.2rem 0;
-}
-.answer-card small {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-.answer-card img {
-  display: block;
-  margin-top: 0.5rem;
-  max-width: 100%;
-  border-radius: var(--radius);
-}
-/* ============================
-   Answer Form Styling (matches Add Doubt)
-============================ */
-#answerForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
 
-#answerForm textarea {
-  padding: 0.8rem 1rem;
-  border-radius: var(--radius);
-  border: none;
-  outline: none;
-  background: rgba(255,255,255,0.05);
-  color: var(--text-light);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-#answerForm textarea::placeholder {
-  color: rgba(255,255,255,0.5);
-}
-#answerForm textarea:focus {
-  background: rgba(255,255,255,0.1);
-  box-shadow: 0 0 0 2px var(--accent1);
-}
 
-/* File input styled like drop-zone */
-#answerForm .file-input {
-  border: 2px dashed rgba(255,255,255,0.3);
-  border-radius: var(--radius);
-  padding: 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.3s ease, background 0.3s ease;
-}
-#answerForm .file-input:hover {
-  border-color: var(--accent1);
-  background: rgba(255,255,255,0.05);
-}
-#answerForm input[type="file"] {
-  display: none;
-}
-#answerFilePreview {
-  margin-top: 0.6rem;
-  font-size: 0.9rem;
-  color: var(--text-light);
-  opacity: 0.85;
-}
-
-/* Submit Answer Button */
-#answerForm button[type="submit"] {
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 0.8rem 1rem;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-#answerForm button[type="submit"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-}

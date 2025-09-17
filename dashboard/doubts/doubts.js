@@ -130,205 +130,16 @@ async function loadDoubts(groupId) {
       )
       .join("");
 
-    document.querySelectorAll(".doubt-item").forEach((item) => {
-      item.addEventListener("click", () => {
-        const doubtId = item.getAttribute("data-id");
-        openDoubtModal(doubtId);
+      document.querySelectorAll(".doubt-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const doubtId = item.dataset.id;
+          toggleDoubtDetails(doubtId, item);
+        });
       });
-    });
+
   } catch (err) {
     console.error("Error loading doubts:", err);
     doubtsList.innerText = "Failed to load doubts.";
-  }
-}
-
-// ================== Doubt Modal ==================
-async function openDoubtModal(doubtId) {
-  const modal = document.getElementById("doubtDetailModal");
-  const content = document.getElementById("doubtDetailContent");
-  const userId = localStorage.getItem("userId");
-
-  modal.classList.remove("hidden");
-  content.innerHTML = "<p>Loading...</p>";
-
-  try {
-    const doubt = await apiFetch(`/doubts/${doubtId}`);
-
-    content.innerHTML = `
-      <h2>${doubt.title}</h2>
-      <p>${doubt.description}</p>
-      ${
-        doubt.imageUrl
-          ? `<img src="${doubt.imageUrl}" alt="Doubt image" style="max-width:100%;margin-top:10px;">`
-          : ""
-      }
-      <small>By ${doubt.userId?.username || "Unknown"} on ${new Date(
-      doubt.createdAt
-    ).toLocaleString()}</small>
-      <p>Status: ${
-        doubt.answered
-          ? '<span class="status-badge status-answered">Answered</span>'
-          : '<span class="status-badge status-pending">Not Answered</span>'
-      }</p>
-
-      <h3>Answers</h3>
-      <div id="answersList">${doubt.answers?.length ? "" : "No answers yet."}</div>
-
-      <form id="answerForm" enctype="multipart/form-data">
-        <textarea id="answerText" placeholder="Your answer..." required></textarea>
-
-        <div class="file-input" id="answerDropZone">
-          <p><i class="fa-solid fa-cloud-arrow-up"></i> Drop file here or click to upload</p>
-          <input type="file" id="answerImage" accept="image/*" />
-        </div>
-        <div id="answerFilePreview"></div>
-
-        <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
-      </form>
-
-      <button id="deleteDoubtBtn" style="display:none;">Delete Doubt</button>
-    `;
-
-    // Show delete button if owner
-    if (doubt.userId?._id === userId) {
-      document.getElementById("deleteDoubtBtn").style.display = "inline-block";
-    }
-
-    // Render answers
-    const answersList = document.getElementById("answersList");
-    if (doubt.answers?.length) {
-      answersList.innerHTML = doubt.answers
-        .map(
-          (a) => `
-          <div class="answer-card" data-id="${a._id}">
-            <p>${a.text}</p>
-            ${
-              a.imageUrl
-                ? `<img src="${a.imageUrl}" alt="Answer image">`
-                : ""
-            }
-            <small>By ${a.createdBy?.username || "Unknown"} on ${new Date(
-            a.createdAt
-          ).toLocaleString()}</small>
-            ${
-              a.createdBy?._id === userId || doubt.userId?._id === userId
-                ? `<button class="delete-answer-btn" data-id="${a._id}">Delete Answer</button>`
-                : ""
-            }
-          </div>
-        `
-        )
-        .join("");
-
-      // Expand/collapse answers
-      answersList.querySelectorAll(".answer-card").forEach((card) => {
-        card.addEventListener("click", (e) => {
-          if (!e.target.classList.contains("delete-answer-btn")) {
-            card.classList.toggle("expanded");
-          }
-        });
-      });
-
-      // Delete answer
-      answersList.querySelectorAll(".delete-answer-btn").forEach((btn) => {
-        btn.addEventListener("click", async (e) => {
-          e.stopPropagation();
-          if (!confirm("Delete this answer?")) return;
-          const token = localStorage.getItem("token");
-          try {
-            const res = await fetch(`${API_BASE}/doubts/answers/${btn.dataset.id}`, {
-              method: "DELETE",
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!res.ok) throw new Error("Failed to delete answer");
-            openDoubtModal(doubtId); // reload modal
-          } catch (err) {
-            console.error("Error deleting answer:", err);
-            alert("Failed to delete answer.");
-          }
-        });
-      });
-    }
-
-    // ---- Answer Form ----
-    const answerForm = document.getElementById("answerForm");
-    const answerDropZone = document.getElementById("answerDropZone");
-    const answerImage = document.getElementById("answerImage");
-    const answerFilePreview = document.getElementById("answerFilePreview");
-
-    // Drop-zone for answer
-    if (answerDropZone) {
-      answerDropZone.addEventListener("click", () => answerImage.click());
-      answerDropZone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        answerDropZone.classList.add("dragging");
-      });
-      answerDropZone.addEventListener("dragleave", () => {
-        answerDropZone.classList.remove("dragging");
-      });
-      answerDropZone.addEventListener("drop", (e) => {
-        e.preventDefault();
-        answerDropZone.classList.remove("dragging");
-        if (e.dataTransfer.files.length) {
-          answerImage.files = e.dataTransfer.files;
-          showFilePreview(answerImage.files[0], answerFilePreview);
-        }
-      });
-      answerImage.addEventListener("change", () => {
-        if (answerImage.files[0]) showFilePreview(answerImage.files[0], answerFilePreview);
-      });
-    }
-
-    // Submit answer
-    answerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Not authenticated. Please login again.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("text", document.getElementById("answerText").value);
-      const file = answerImage.files[0];
-      if (file) formData.append("image", file);
-
-      try {
-        const res = await fetch(`${API_BASE}/doubts/${doubtId}/add-answer`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-        if (!res.ok) throw new Error("Failed to submit answer");
-        openDoubtModal(doubtId); // reload modal
-      } catch (err) {
-        console.error("Error submitting answer:", err);
-        alert("Failed to submit answer.");
-      }
-    });
-
-    // Delete doubt
-    document.getElementById("deleteDoubtBtn").addEventListener("click", async () => {
-      if (!confirm("Are you sure you want to delete this doubt?")) return;
-      const token = localStorage.getItem("token");
-      try {
-        const res = await fetch(`${API_BASE}/doubts/${doubtId}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error("Failed to delete doubt");
-        alert("Doubt deleted!");
-        modal.classList.add("hidden");
-        loadDoubts(localStorage.getItem("groupId")); // refresh list
-      } catch (err) {
-        console.error("Error deleting doubt:", err);
-        alert("Failed to delete doubt.");
-      }
-    });
-
-  } catch (err) {
-    console.error("Error loading doubt:", err);
-    content.innerHTML = "<p>Failed to load doubt details.</p>";
   }
 }
 
@@ -341,8 +152,145 @@ function showFilePreview(file, targetEl) {
     </p>
   `;
 }
+// ================== Inline Doubt Details ==================
+async function toggleDoubtDetails(doubtId, itemEl) {
+  const userId = localStorage.getItem("userId");
 
-// ================== Close Modal ==================
-document.querySelector("#doubtDetailModal .close").addEventListener("click", () => {
-  document.getElementById("doubtDetailModal").classList.add("hidden");
-});
+  // Check if already rendered
+  let detailsEl = itemEl.querySelector(".doubt-details");
+  // Close any other open details
+  document.querySelectorAll(".doubt-details").forEach(el => {
+    if (el !== detailsEl) el.remove();
+  });
+
+  if (detailsEl) {
+      detailsEl.classList.toggle("show");
+      return;
+    }
+
+
+  // Create container
+  detailsEl = document.createElement("div");
+  detailsEl.className = "doubt-details";
+  detailsEl.innerHTML = "<p>Loading...</p>";
+  itemEl.appendChild(detailsEl);
+
+  try {
+    const doubt = await apiFetch(`/doubts/${doubtId}`);
+
+    detailsEl.innerHTML = `
+      <p>${doubt.description}</p>
+      ${doubt.imageUrl ? `<img src="${doubt.imageUrl}" alt="Doubt image" style="max-width:100%;margin-top:10px;">` : ""}
+      <small>By ${doubt.userId?.username || "Unknown"} • ${new Date(doubt.createdAt).toLocaleString()}</small>
+      <p>Status: ${doubt.answered 
+        ? '<span class="status-badge status-answered">Answered</span>' 
+        : '<span class="status-badge status-pending">Not Answered</span>'}</p>
+
+      <h3>Answers</h3>
+      <div class="answers-list">${doubt.answers?.length ? "" : "No answers yet."}</div>
+
+      <form class="answer-form" enctype="multipart/form-data">
+        <textarea placeholder="Your answer..." required></textarea>
+        <input type="file" accept="image/*" class="answer-image" style="margin-top:0.5rem;">
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
+      </form>
+
+      ${doubt.userId?._id === userId 
+        ? `<button class="delete-doubt-btn">Delete Doubt</button>` 
+        : ""}
+      
+      <button class="go-back-btn"><i class="fa-solid fa-arrow-left"></i> Go Back</button>
+
+    `;
+
+    // Render answers
+    const answersList = detailsEl.querySelector(".answers-list");
+    if (doubt.answers?.length) {
+      answersList.innerHTML = doubt.answers.map(a => `
+        <div class="answer-card">
+          <p>${a.text}</p>
+          ${a.imageUrl ? `<img src="${a.imageUrl}" alt="Answer image">` : ""}
+          <small>By ${a.createdBy?.username || "Unknown"} • ${new Date(a.createdAt).toLocaleString()}</small>
+        </div>
+      `).join("");
+    }
+
+    // Submit new answer
+    const answerForm = detailsEl.querySelector(".answer-form");
+    const answerImage = detailsEl.querySelector(".answer-image");
+    answerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Not authenticated.");
+
+      const formData = new FormData();
+      formData.append("text", answerForm.querySelector("textarea").value);
+      if (answerImage.files[0]) formData.append("image", answerImage.files[0]);
+
+      try {
+        const res = await fetch(`${API_BASE}/doubts/${doubtId}/add-answer`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        if (!res.ok) throw new Error("Failed to submit answer");
+
+        // ✅ fetch updated answers only
+        const updated = await apiFetch(`/doubts/${doubtId}`);
+
+        answersList.innerHTML = updated.answers.map(a => `
+          <div class="answer-card">
+            <p>${a.text}</p>
+            ${a.imageUrl ? `<img src="${a.imageUrl}" alt="Answer image">` : ""}
+            <small>By ${a.createdBy?.username || "Unknown"} • ${new Date(a.createdAt).toLocaleString()}</small>
+          </div>
+        `).join("");
+
+        answerForm.reset(); // clear the form
+        answerImage.value = ""; // clear image input too
+
+        } 
+        catch (err) {
+          console.error("Error submitting answer:", err);
+          alert("Failed to submit answer.");
+        }
+
+    });
+
+    // Delete doubt
+    const deleteBtn = detailsEl.querySelector(".delete-doubt-btn");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", async () => {
+        if (!confirm("Delete this doubt?")) return;
+        const token = localStorage.getItem("token");
+        try {
+          const res = await fetch(`${API_BASE}/doubts/${doubtId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!res.ok) throw new Error("Failed to delete doubt");
+          alert("Doubt deleted!");
+          itemEl.remove();
+        } catch (err) {
+          console.error("Error deleting doubt:", err);
+          alert("Failed to delete doubt.");
+        }
+      });
+    }
+    // Go back button
+    const backBtn = detailsEl.querySelector(".go-back-btn");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        detailsEl.remove();
+      });
+    }
+
+    
+
+
+  } catch (err) {
+    console.error("Error loading doubt:", err);
+    detailsEl.innerHTML = "<p>Failed to load details.</p>";
+  }
+}
+

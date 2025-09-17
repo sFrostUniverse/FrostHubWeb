@@ -61,45 +61,6 @@
       <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit</button>
     </form>
   </div>
-
-  <!-- Doubt Details Modal -->
-  <div id="doubtDetailModal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div id="doubtDetailContent">
-        <!-- Filled dynamically by doubts.js -->
-        <h2 id="modalTitle">Loading...</h2>
-        <p id="modalDescription"></p>
-        <div id="modalMeta"></div>
-        <div id="modalStatus"></div>
-
-        <!-- Answers section -->
-        <h3>Answers</h3>
-        <div id="answersList">No answers yet.</div>
-
-        <!-- Answer form -->
-        <form id="answerForm">
-          <textarea id="answerText" placeholder="Your answer..." required></textarea>
-
-          <!-- File drop-style input -->
-          <div class="file-input" id="answerDropZone">
-            <p><i class="fa-solid fa-cloud-arrow-up"></i> Drop file here or click to upload</p>
-            <input type="file" id="answerImage" accept="image/*">
-          </div>
-          <div id="answerFilePreview"></div>
-
-          <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Answer</button>
-        </form>
-
-
-        <!-- Delete doubt button -->
-        <button id="deleteDoubtBtn" style="display:none;color:white;background:red;margin-top:10px;">
-          Delete Doubt
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Scripts -->
   <script src="../../shared/utils.js"></script>
   <script src="../../shared/sidebar.js"></script>
