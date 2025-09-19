@@ -255,22 +255,23 @@
 }
 
 /* Inline Doubt Details Back Button */
+./* Inline Doubt Details Back Button */
 .go-back-btn {
-  position: absolute;
-  top: 8px;
-  left: 12px;
+  position: relative;  /* no longer absolute */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1rem;   /* ✅ pushes content down */
   background: none;
   border: none;
   color: var(--text-light);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   opacity: 0.75;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
 .go-back-btn:hover {
   opacity: 1;
   transform: translateX(-2px);
