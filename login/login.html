@@ -4,31 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FrostHub - Login</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="login.css">
 
   <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-  <div class="container">
+  <div class="login-container">
     <h1>FrostHub</h1>
 
-    <!-- Google Sign-In button -->
-    <div id="g_id_onload"
+    <!-- Email / Password Login -->
+    <section class="card">
+      <h2>Sign In</h2>
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <div class="divider">or</div>
+
+    <!-- Google Sign-In -->
+    <section class="card">
+      <h2>Continue with Google</h2>
+      <div id="g_id_onload"
         data-client_id="707939445682-5pjgo6cvllr8irfl5gtob6ikcbccns76.apps.googleusercontent.com"
         data-callback="handleGoogleResponse"
         data-auto_prompt="false">
-    </div>
+      </div>
 
-
-    <div class="g_id_signin"
-         data-type="standard"
-         data-shape="rectangular"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-size="large"
-         data-logo_alignment="left">
-    </div>
+      <div class="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="sign_in_with"
+          data-size="large"
+          data-logo_alignment="left">
+      </div>
+    </section>
   </div>
 
   <script src="login.js"></script>
