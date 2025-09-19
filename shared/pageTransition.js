@@ -9,18 +9,22 @@ window.addEventListener("DOMContentLoaded", () => {
   // Intercept sidebar/internal links for smooth fade-out
   document.querySelectorAll(".sidebar a, a[data-transition]").forEach(link => {
     const href = link.getAttribute("href");
-    if (href && !href.startsWith("#") && !href.startsWith("http")) {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
 
-        // Trigger fade-out
-        wrapper.classList.remove("fade-in");
-
-        // After fade-out ends, navigate
-        setTimeout(() => {
-          window.location.href = href;
-        }, 400); // match CSS transition: 0.4s in dashboard.css
-      });
+    // ⛔ Skip logout + anchors + external links
+    if (!href || href.startsWith("#") || href.startsWith("http") || link.id === "logout") {
+      return;
     }
+
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Trigger fade-out
+      wrapper.classList.remove("fade-in");
+
+      // After fade-out ends, navigate
+      setTimeout(() => {
+        window.location.href = href;
+      }, 400); // match CSS transition
+    });
   });
 });
