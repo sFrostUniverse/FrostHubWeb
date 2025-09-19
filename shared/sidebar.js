@@ -3,6 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const layout = document.querySelector(".layout");
   const sidebar = document.getElementById("sidebar");
   const toggleBtn = document.getElementById("sidebarToggle");
+  const logoutBtn = document.getElementById("logout"); // ✅ logout link
 
   if (!layout || !sidebar || !toggleBtn) return;
 
@@ -32,4 +33,15 @@ window.addEventListener("DOMContentLoaded", () => {
     const isCollapsed = sidebar.classList.contains("collapsed");
     setSidebarState(!isCollapsed, true);
   });
+
+  // ✅ Logout handling
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      localStorage.removeItem("token");
+      localStorage.removeItem("groupId");
+      localStorage.removeItem("userId");
+      window.location.href = "../login/login.html"; // adjust path if needed
+    });
+  }
 });
