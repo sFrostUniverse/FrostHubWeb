@@ -225,6 +225,7 @@ async function toggleDoubtDetails(doubtId, itemEl) {
         </div>
       `).join("");
     }
+setupImageOverlay();
 
     // Submit new answer
     const answerForm = detailsEl.querySelector(".answer-form");
@@ -304,4 +305,33 @@ async function toggleDoubtDetails(doubtId, itemEl) {
     detailsEl.innerHTML = "<p>Failed to load details.</p>";
   }
 }
+// ================== Image Lightbox ==================
+function setupImageOverlay() {
+  // Create overlay container if not already present
+  if (!document.querySelector(".image-overlay")) {
+    const overlay = document.createElement("div");
+    overlay.className = "image-overlay";
+    overlay.innerHTML = `
+      <span class="close">&times;</span>
+      <img src="" alt="Preview">
+    `;
+    document.body.appendChild(overlay);
 
+    // Close on click
+    overlay.querySelector(".close").addEventListener("click", () => {
+      overlay.classList.remove("show");
+    });
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) overlay.classList.remove("show");
+    });
+  }
+
+  // Attach click event to all doubt/answer images
+  document.querySelectorAll(".doubt-details img, .answer-card img").forEach(img => {
+    img.addEventListener("click", () => {
+      const overlay = document.querySelector(".image-overlay");
+      overlay.querySelector("img").src = img.src;
+      overlay.classList.add("show");
+    });
+  });
+}
